@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'rate_a_car_app/style.css' %}">
+</head>
+<body>
+<div class="main-menu-bar">
+    <div class="main-logo"><img src="{% static 'rate_a_car_app/cars.png' %}" width="220px" height="140px"></div>
+    <div class="main-bar">
+        <ol>
+            <li><a href="/index">Strona główna</a> </li>
+            <li><a href="#">Auta</a>
+            <ul>
+                <li><a href="#">Dodaj</a> </li>
+            </ul></li>
+            <li><a href="#">Zaloguj</a></li>
+            <li>Panel
+            <ul>
+                <li><a href="#">Profil użytkownika</a> </li>
+                <li><a href="#">Historia aut</a> </li>
+                <li><a href="#">Ustawienia</a> </li>
+                <li><a href="#">Wyloguj</a> </li>
+            </ul>
+                </li>
+            <li>Kontakt
+                <ul>
+                    <li><a href="#">Kontakt</a> </li>
+                    <li><a href="#">Regulamin</a> </li>
+                    <li><a href="#">FAQ</a> </li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+</div>
+{% block content %}
+
+{% endblock %}
+
+</body>
+</html>
