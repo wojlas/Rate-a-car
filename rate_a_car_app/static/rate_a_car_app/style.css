@@ -1,5 +1,12 @@
+body {
+  margin-left: auto;
+  margin-right: auto;
+}
 .main-logo {
     float: left;
+    display: flex;
+    justify-content: center;
+    text-align: center;
 }
 
 ol {

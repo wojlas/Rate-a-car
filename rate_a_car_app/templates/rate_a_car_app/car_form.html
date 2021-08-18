@@ -1,0 +1,12 @@
+{% extends 'rate_a_car_app/base.html' %}
+{% block title %}
+Dodaj auto|Rate a Car
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+    {% csrf_token %}
+    <ul>{{ form.as_ul }}</ul>
+    <input type="submit" value="Dodaj">
+    </form>
+{% endblock %}
