@@ -14,10 +14,6 @@ CHOICES = {
 }
 
 
-class YearsOfProduction(models.Model):
-    year_of_production = models.ValueRange()
-
-
 class Rate(models.Model):
     endurance = models.IntegerField(choices=CHOICES, verbose_name='Wytrzymałość')
     leading = models.IntegerField(choices=CHOICES, verbose_name='Prowadzenie')
@@ -26,19 +22,15 @@ class Rate(models.Model):
 
 
 class Brand(models.Model):
-    name = models.CharField(max_length=32, verbose_name='Marka')
+    name = models.CharField(max_length=32, verbose_name='Marka', unique=True)
 
     def __str__(self):
         return f"{self.name}"
 
 
-class CarModels(models.Model):
-    model_name = models.CharField(max_length=32, verbose_name='Model')
-    versions = models.ForeignKey(YearsOfProduction, on_delete=models.CASCADE, verbose_name='Wersja', null=True)
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, null=True)
-
-
 class Car(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name='Marka', null=True)
-    car_model = models.ForeignKey(CarModels, on_delete=models.CASCADE, verbose_name='Model', null=True)
+    car_model = models.CharField(max_length=32, verbose_name='Model')
+    versions = models.CharField(max_length=32, verbose_name='Wersja')
+    year_of_production = models.CharField(max_length=12, verbose_name='Lata produkcji', null=True)
     rate = models.ForeignKey(Rate, on_delete=models.CASCADE, verbose_name='Ocena', null=True)

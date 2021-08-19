@@ -1,84 +1,86 @@
-body {
-  margin-left: auto;
-  margin-right: auto;
-}
-.main-logo {
-    float: left;
+.main-menu-bar {
     display: flex;
     justify-content: center;
-    text-align: center;
 }
 
 ol {
-  list-style-type:none;
-  padding:100px;
-  margin:0;
-  font-size:18px;
-  height:2em;
-  line-height:2em;
-  text-align:center;
-  align-items: center;
+    list-style-type: none;
+    padding: 100px;
+    margin: 0;
+    font-size: 18px;
+    height: 2em;
+    line-height: 2em;
+    text-align: center;
+    align-items: center;
 }
+
 ol > li {
-  float:left;
-  background-color:#DDDDDD;
-  width:150px;
+    float: left;
+    background-color: #DDDDDD;
+    width: 150px;
 }
+
 ol a {
-  display:block;
-  color:#000;
-  text-decoration:none;
-  padding:0 5px;
+    display: block;
+    color: #000;
+    text-decoration: none;
+    padding: 0 5px;
 }
+
 ol > li > a:hover {
-  color:#0099CC;
+    color: #0099CC;
 }
 
 ol > li:hover {
-  background-color:#EEE;
+    background-color: #EEE;
 }
+
 ol > li > ul {
-  list-style-type:none;
-  padding:0;
-  margin:0;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
+
 ol > li {
-  float:left;
-  background-color:#0099CC;
-  width:150px;
-  margin-left:1px;
-  height:2em;
+    float: left;
+    background-color: #0099CC;
+    width: 180px;
+    margin-left: 1px;
+    height: 2em;
 }
 
 ol > li:first-child {
-  margin-left:0;
+    margin-left: 0;
 }
+
 ol > li > ul > li > a {
-  border-top:1px solid #000000;
+    border-top: 1px solid #000000;
 }
+
 ol {
-  background-color:#FFF;
+    background-color: #FFF;
 }
 
 ol > li > ul > li {
-  background-color:#EEE;
+    background-color: #EEE;
 }
 
 ol > li > ul > li:hover {
-  background-color:#DDD;
+    background-color: #DDD;
 }
 
 ol > li > ul > li:hover a {
-  color:#09C;
+    color: #09C;
 }
+
 ol > li > ul {
-  display:none;
+    display: none;
 }
 
 ol > li:hover > ul {
-  display:block;
+    display: block;
 }
 
 ol > li:hover > a {
-  color:#09C;
+    color: #09C;
 }
