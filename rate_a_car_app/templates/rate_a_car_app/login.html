@@ -1,0 +1,17 @@
+{% extends 'rate_a_car_app/base.html' %}
+{% block title %}
+Logowanie | Rate-a-Car
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" value="Zaloguj">
+    </form>
+
+    {{ error }}
+
+{% endblock %}

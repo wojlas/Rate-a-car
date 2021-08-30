@@ -17,14 +17,17 @@
                     <li><a href="/create">Dodaj</a></li>
                 </ul>
             </li>
-            <li><a href="#">Zaloguj</a></li>
-            <li>Panel
+            {% if not user.is_authenticated %}
+            <li><a href="{% url 'login' %}">Zaloguj</a></li>
+            {% else %}
+            <li>{{ user.username }}
                 <ul>
                     <li><a href="#">Profil użytkownika</a></li>
                     <li><a href="#">Historia aut</a></li>
                     <li><a href="#">Ustawienia</a></li>
-                    <li><a href="#">Wyloguj</a></li>
+                    <li><a href="{% url 'logout' %}"> Wyloguj</a></li>
                 </ul>
+            {% endif %}
             </li>
             <li>Kontakt
                 <ul>

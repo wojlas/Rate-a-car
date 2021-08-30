@@ -1,33 +1,36 @@
-from django.shortcuts import render
-
+from django.contrib.auth import logout, authenticate, login
+from django.shortcuts import render, redirect
 # Create your views here.
 from django.views import View
-from django.views.generic import CreateView
-from rate_a_car_app.models import Car
-from rate_a_car_app.forms import AddBrandForm, AddCarForm
+
+from .forms import LoginForm
 
 
 class IndexView(View):
     def get(self, request):
-        cnt = {'cars': Car.objects.all().order_by('brand', 'car_model')}
+        cnt = {}
         return render(request, 'rate_a_car_app/index.html', cnt)
 
-class CreateCarView(View):
+
+class LoginView(View):
     def get(self, request):
-        add_car_form = AddCarForm()
-        create_brand_form = AddBrandForm
-        return render(request, 'rate_a_car_app/create-car.html', {'add_car_form': add_car_form,
-                                                                  'create_brand_form': create_brand_form})
+        form = LoginForm()
+        return render(request, 'rate_a_car_app/login.html', {'form': form})
 
     def post(self, request):
-        if AddCarForm(request.POST):
-            add_car_form = AddCarForm(request.POST)
-            if add_car_form.is_valid():
-                add_car_form.save()
-                return render(request, 'rate_a_car_app/index.html')
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = authenticate(username=form.cleaned_data['login'], password=form.cleaned_data['password'])
+            if user is not None:
+                login(request, user)
+                return redirect('/')
+            else:
+                form = LoginForm()
+                return render(request, 'rate_a_car_app/login.html', {'form': form, 'error': 'Zły login lub hasło'})
 
-        elif AddBrandForm(request.POST):
-            create_brand_form = AddBrandForm(request.POST)
-            if create_brand_form.is_valid():
-                create_brand_form.save()
-                return render(request, 'rate_a_car_app/create-car.html')
+
+
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('/')
