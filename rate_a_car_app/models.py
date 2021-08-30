@@ -19,30 +19,33 @@ class Owner(models.Model):
     rates = models.ForeignKey('Rate', on_delete=models.CASCADE)
 
 class Brand(models.Model):
-    brand = models.CharField(unique=True, max_length=32)
+    brand = models.CharField(unique=True, max_length=32, verbose_name='Marka')
 
     def __str__(self):
         return f'{self.brand}'
 
 class CarModel(models.Model):
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-    name = models.CharField(max_length=32)
-    version = models.CharField(max_length=32)
-    production_from = models.IntegerField(null=False)
-    production_to = models.IntegerField(null=False)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name='Marka')
+    name = models.CharField(max_length=32, verbose_name='Model')
+    version = models.CharField(max_length=32, verbose_name='Wersja')
+    production_from = models.IntegerField(null=False, verbose_name='Produkcja od')
+    production_to = models.IntegerField(null=False, verbose_name='Produkcja do')
+
+    def __str__(self):
+        return f"{self.name}({self.version} ({self.production_from}-{self.production_to}))"
 
 class Car(models.Model):
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-    model = models.ForeignKey(CarModel, on_delete=models.CASCADE)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name='Marka')
+    model = models.ForeignKey(CarModel, on_delete=models.CASCADE, verbose_name='Model')
     rate = models.ForeignKey('Rate', on_delete=models.CASCADE)
     opinions = models.ForeignKey('Notice', on_delete=models.CASCADE)
     owners = models.ForeignKey(Owner, on_delete=models.CASCADE)
 
 class Rate(models.Model):
-    endurance = models.IntegerField(choices=RATE_CHOICE)
-    operation_cost = models.IntegerField(choices=RATE_CHOICE)
-    leading = models.IntegerField(choices=RATE_CHOICE)
-    design = models.IntegerField(choices=RATE_CHOICE)
+    endurance = models.IntegerField(choices=RATE_CHOICE, verbose_name='Wytrzymałość')
+    operation_cost = models.IntegerField(choices=RATE_CHOICE, verbose_name='Koszty utrzymania')
+    leading = models.IntegerField(choices=RATE_CHOICE, verbose_name='Prowadzenie')
+    design = models.IntegerField(choices=RATE_CHOICE, verbose_name='Wygląd')
 
 class Notice(models.Model):
     author = models.OneToOneField(User, on_delete=models.CASCADE)

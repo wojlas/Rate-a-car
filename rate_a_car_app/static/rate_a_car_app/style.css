@@ -3,6 +3,10 @@
     justify-content: center;
 }
 
+body {
+    background-color: #DDDDDD;
+}
+
 ol {
     list-style-type: none;
     padding: 100px;
@@ -84,3 +88,17 @@ ol > li:hover > ul {
 ol > li:hover > a {
     color: #09C;
 }
+
+.grid-content {
+    display: flex;
+    justify-content: center;
+}
+
+.container1 {
+    float: left;
+}
+
+.container1:first-child {
+    margin-right: 30px;
+}
+

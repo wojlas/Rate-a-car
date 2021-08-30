@@ -2,10 +2,11 @@
 {% block title %}
 Rate a Car
 {% endblock %}
-{% block content %}
+{% block container2 %}
     {% for car in cars %}
         <ul>
-            <li>{{ car.brand }} {{ car.car_model }} {{ car.versions }} {{ car.year_of_production }} {{ car.years_of_production }}</li>
+            <li>{{ car.brand }} {{ car.name }} {{ car.version }} {{ car.production_from }} - {{ car.production_to }}</li>
         </ul>
     {% endfor %}
+
 {% endblock %}

@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 import django.forms as forms
-from .models import Brand, CarModel
+from .models import Brand, CarModel, Car
+
 
 class NewBrandForm(ModelForm):
     class Meta:
@@ -11,6 +12,7 @@ class NewModelForm(ModelForm):
     class Meta:
         model = CarModel
         fields = '__all__'
+
 
 class LoginForm(forms.Form):
     login = forms.CharField(max_length=32, label='Login')
