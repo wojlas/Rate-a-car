@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMix
 from django.views import View
 
 from .forms import LoginForm, NewBrandForm, NewModelForm
-from .models import Brand, Car, CarModel
+from .models import Brand, CarModel
 
 
 class IndexView(View):
@@ -69,7 +69,7 @@ class NewModelView(LoginRequiredMixin, View):
         add_model = NewModelForm(request.POST)
         if add_model.is_valid():
             CarModel.objects.create(brand=add_model.cleaned_data['brand'],
-                                    name=add_model.cleaned_data['name'],
+                                    model=add_model.cleaned_data['model'],
                                     version=add_model.cleaned_data['version'],
                                     production_from=add_model.cleaned_data['production_from'],
                                     production_to=add_model.cleaned_data['production_to'])
@@ -77,3 +77,9 @@ class NewModelView(LoginRequiredMixin, View):
         else:
             ctx = {'add_model': NewModelForm()}
             return render(request, 'rate_a_car_app/create-brand.html', ctx)
+
+
+class BrowseCarView(View):
+    def get(self, request):
+        ctx = {'new_car': CarModel.objects.all()}
+        return render(request, 'rate_a_car_app/cars.html', ctx)

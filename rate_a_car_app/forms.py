@@ -1,6 +1,7 @@
-from django.forms import ModelForm
 import django.forms as forms
-from .models import Brand, CarModel, Car
+from django.forms import ModelForm
+
+from .models import Brand, CarModel
 
 
 class NewBrandForm(ModelForm):
@@ -8,10 +9,17 @@ class NewBrandForm(ModelForm):
         model = Brand
         fields = '__all__'
 
+
+# def production_to_validator(value):
+#     if not value:
+#         return '-'
+
+
 class NewModelForm(ModelForm):
     class Meta:
         model = CarModel
-        fields = '__all__'
+        fields = ['brand', 'model', 'version', 'production_from', 'production_to']
+        production_to = forms.IntegerField(label='Produkcja do', widget=forms.IntegerField)
 
 
 class LoginForm(forms.Form):

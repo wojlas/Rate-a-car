@@ -1,0 +1,22 @@
+{% extends 'rate_a_car_app/base.html' %}
+{% block title %}
+    Przeglądaj auta | Rate a Car
+{% endblock %}
+
+{% block container1 %}
+    <table bgcolor="#a9a9a9" border="2px">
+        <tr><td align="center" colspan="3"><h3>Auta</h3></td></tr>
+            <tr>
+                <td align="center"> Marka </td>
+                <td align="center"> Model </td>
+                <td align="center"> Lata produkcji </td>
+            </tr>
+        {% for car in new_car %}
+            <tr>
+                <td align="center"> {{ car.brand }} </td>
+                <td align="center"> {{ car.model }}({{ car.version }})</td>
+                <td align="center"> {{ car.production_from }} - {{ car.production_to }} </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
