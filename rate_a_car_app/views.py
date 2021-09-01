@@ -1,11 +1,12 @@
 from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 # Create your views here.
 from django.views import View
 
 from .forms import LoginForm, NewBrandForm, NewModelForm
-from .models import Brand, CarModel
+from .models import Brand, CarModel, Owner, CarOwners
 
 
 class IndexView(View):
@@ -83,3 +84,16 @@ class BrowseCarView(View):
     def get(self, request):
         ctx = {'new_car': CarModel.objects.all()}
         return render(request, 'rate_a_car_app/cars.html', ctx)
+
+class CarDetailsView(View):
+    def get(self, request, car):
+        car = CarModel.objects.get(model=car)
+        ctx = {'car':car}
+        return render(request, 'rate_a_car_app/car-details.html', ctx)
+
+class UserProfileView(View):
+    def get(self, request, user):
+        user = User.objects.get(username=user)
+        ctx = {'user': user,
+               'cars':CarOwners.objects.filter(owner=user.pk)}
+        return render(request, 'rate_a_car_app/user-view.html', ctx)

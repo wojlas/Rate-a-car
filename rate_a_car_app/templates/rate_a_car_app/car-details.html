@@ -1,0 +1,13 @@
+{% extends 'rate_a_car_app/base.html' %}
+{% block title %}
+{{ car }} | Rate a Car
+{% endblock %}
+
+{% block container1 %}
+    Szczegóły: <br>
+    Marka: {{ car.brand }} <br>
+    Model: {{ car.model }} <br>
+    Wersja: {{ car.version }} <br>
+    Lata produkcji: {{ car.production_from }} - {{ car.production_to }} <br>
+
+{% endblock %}

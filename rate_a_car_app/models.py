@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -17,7 +19,7 @@ RATE_CHOICE = {
 
 class Owner(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    car_history = models.ForeignKey('CarModel', on_delete=models.CASCADE)
+    car_history = models.ManyToManyField('CarModel', through='CarOwners')
     rates = models.ForeignKey('Rate', on_delete=models.CASCADE)
 
 
@@ -39,7 +41,7 @@ class CarModel(models.Model):
     production_to = models.CharField(null=True, verbose_name='Produkcja do', default=' - ', max_length=4)
     rate = models.ForeignKey('Rate', on_delete=models.CASCADE, null=True)
     opinions = models.ForeignKey('Notice', on_delete=models.CASCADE, null=True)
-    owners = models.ForeignKey(Owner, on_delete=models.CASCADE, null=True)
+    owners = models.ManyToManyField(Owner, through='CarOwners')
 
     def __str__(self):
         return f'{self.brand} {self.model}({self.version})'
@@ -56,3 +58,10 @@ class Notice(models.Model):
     author = models.OneToOneField(User, on_delete=models.CASCADE)
     content = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
+
+class CarOwners(models.Model):
+    car = models.ForeignKey(CarModel, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    use_from = models.IntegerField(null=False)
+    use_to = models.CharField(default='-', max_length=4)
+    notice = models.ForeignKey(Notice, on_delete=models.CASCADE, null=True)

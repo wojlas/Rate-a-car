@@ -1,0 +1,29 @@
+{% extends 'rate_a_car_app/base.html' %}
+{% block title %}
+{{ user.user.username }} | Rate a Car
+{% endblock %}
+
+{% block container1 %}
+    Informacje:<br>
+    Nazwa użytkownika: {{ user.username }} <br>
+    Imię: {{ user.first_name }} <br>
+    Nazwisko: {{ user.last_name }} <br>
+    Email: {{ user.email }} <br>
+    Data dołączenia: {{ user.date_joined.date }} <br>
+    Liczba aut:
+{% endblock %}
+
+{% block container2 %}
+    Historia pojazdów: <br>
+     {% for car in cars %}
+        {{ car }} {{ car.use_from }} - {{ car.use_to }} <br>
+     {% endfor %}
+{% endblock %}
+
+{% block container3 %}
+    Ostatnie opinie: <br>
+    {% for car in cars %}
+        <h4>{{ car.notice.date }} {{ car.car }}</h4> <br>
+        {{ car.notice.content }}
+    {% endfor %}
+{% endblock %}

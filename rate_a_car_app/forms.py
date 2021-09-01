@@ -10,11 +10,6 @@ class NewBrandForm(ModelForm):
         fields = '__all__'
 
 
-# def production_to_validator(value):
-#     if not value:
-#         return '-'
-
-
 class NewModelForm(ModelForm):
     class Meta:
         model = CarModel

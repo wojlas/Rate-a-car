@@ -24,7 +24,7 @@
             {% else %}
             <li>{{ user.username }}
                 <ul>
-                    <li><a href="#">Profil użytkownika</a></li>
+                    <li><a href="{% url 'user-profile' user.username %}">Profil użytkownika</a></li>
                     <li><a href="#">Historia aut</a></li>
                     <li><a href="#">Ustawienia</a></li>
                     <li><a href="{% url 'logout' %}"> Wyloguj</a></li>
