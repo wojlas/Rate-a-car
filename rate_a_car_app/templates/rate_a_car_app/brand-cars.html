@@ -1,0 +1,21 @@
+{% extends 'rate_a_car_app/base.html' %}
+{% block title %}
+{% for car in cars %}{{ car.brand }} {% endfor %} | Rate a Car
+{% endblock %}
+
+{% block container1 %}
+    Marki: <br>
+    <a href="{% url 'cars' %}">Wszystkie</a><br>
+    {% for brand in brands %}
+      <a href="{% url 'car-brand' brand.brand %}">{{ brand }}</a> <br>
+
+    {% endfor %}
+{% endblock %}
+{% block container2 %}
+    Modele {{ brand_name.brand }}:<br>
+    {% for car in cars %}
+
+        <a href="{% url 'car-details' car.model car.version %}">{{ car.model }} {{ car.version }} </a> <br>
+
+    {% endfor %}
+{% endblock %}

@@ -36,7 +36,7 @@ class Brand(models.Model):
 class CarModel(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name='Marka')
     model = models.CharField(max_length=32, verbose_name='Model')
-    version = models.CharField(max_length=32, verbose_name='Wersja')
+    version = models.CharField(max_length=32, verbose_name='Wersja', null=True)
     production_from = models.IntegerField(null=False, verbose_name='Produkcja od')
     production_to = models.CharField(null=True, verbose_name='Produkcja do', default=' - ', max_length=4)
     rate = models.ForeignKey('Rate', on_delete=models.CASCADE, null=True)
@@ -60,8 +60,8 @@ class Notice(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
 class CarOwners(models.Model):
-    car = models.ForeignKey(CarModel, on_delete=models.CASCADE)
+    car = models.ForeignKey(CarModel, on_delete=models.CASCADE, verbose_name='Samochód')
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    use_from = models.IntegerField(null=False)
-    use_to = models.CharField(default='-', max_length=4)
+    use_from = models.IntegerField(null=False, verbose_name='Od')
+    use_to = models.CharField(default='-', max_length=4, verbose_name='Do')
     notice = models.ForeignKey(Notice, on_delete=models.CASCADE, null=True)

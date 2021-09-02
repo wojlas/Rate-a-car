@@ -4,6 +4,14 @@
 {% endblock %}
 
 {% block container1 %}
+    Marki: <br>
+    {% for brand in brands %}
+      <a href="{% url 'car-brand' brand.brand %}">{{ brand }}</a> <br>
+
+    {% endfor %}
+{% endblock %}
+
+{% block container2 %}
     <table border="2px">
         <tr><td align="center" colspan="3"><h3>Auta</h3></td></tr>
             <tr>
@@ -14,7 +22,7 @@
         {% for car in new_car %}
             <tr>
                 <td align="center"> {{ car.brand }} </td>
-                <td align="center"><a href="{% url 'car-details' car.model %}">{{ car.model }}({{ car.version }})</a></td>
+                <td align="center"><a href="{% url 'car-details' car.model car.version %}">{{ car.model }}({{ car.version }})</a></td>
                 <td align="center"> {{ car.production_from }} - {{ car.production_to }} </td>
             </tr>
         {% endfor %}

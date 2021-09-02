@@ -3,10 +3,29 @@
 Rate a Car
 {% endblock %}
 {% block container2 %}
-    {% for car in cars %}
+        {% for car in cars %}
         <ul>
             <li>{{ car.brand }} {{ car.name }} {{ car.version }} {{ car.production_from }} - {{ car.production_to }}</li>
         </ul>
     {% endfor %}
+
+    <div class="pagination">
+    <span class="step-links">
+        {% if cars.has_previous %}
+            <a href="?page=1">&laquo; pierwsza | </a>
+            <a href="?page={{ cars.previous_page_number }}">poprzednia | </a>
+        {% endif %}
+
+         <span class="current">
+                    Strona {{ cars.number }} z {{ cars.paginator.num_pages }}.
+                </span>
+
+        {% if cars.has_next %}
+            <a href="?page={{ cars.next_page_number }}"> następna  </a>|
+            <a href="?page={{ cars.paginator.num_pages }}">ostatnia &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
 
 {% endblock %}
