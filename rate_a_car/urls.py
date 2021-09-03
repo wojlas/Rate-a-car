@@ -18,13 +18,15 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from rate_a_car_app.views import IndexView, LoginView, LogoutView, NewBrandView, NewModelView, BrowseCarView,\
-    UserProfileView, CarDetailsView, BrowseBrandModelsView, AddCarHistoryView
+    UserProfileView, CarDetailsView, BrowseBrandModelsView, AddCarHistoryView, ForgotPassView, RegisterView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view()),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('login/', LoginView.as_view(), name='login'),
+    path('reset/', ForgotPassView.as_view(), name='new-password'),
+    path('register/', RegisterView.as_view(), name='register'),
     path('create-brand/', NewBrandView.as_view(), name='create-brand'),
     path('create-model/', NewModelView.as_view(), name='create-model'),
     path('cars/', BrowseCarView.as_view(), name='cars'),

@@ -1,17 +1,16 @@
 {% extends 'rate_a_car_app/base.html' %}
 {% block title %}
-Logowanie | Rate-a-Car
+Rejestracja | Rate-a-Car
 {% endblock %}
 
 {% block container2 %}
     <form method="post">
     {% csrf_token %}
     <table>
-        {{ form.as_table }}
+        {{ form_user.as_table }}
 
     </table>
-        <h6><a href="{% url 'new-password' %}">Zapomniałeś hasła?</a></h6>
-    <input type="submit" value="Zaloguj">
+    <input type="submit" value="Zarejestruj">
     </form>
 
     {{ error }}

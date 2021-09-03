@@ -6,8 +6,8 @@ from django.core.paginator import Paginator
 # Create your views here.
 from django.views import View
 
-from .forms import LoginForm, NewBrandForm, NewModelForm, AddCarsHistoryForm
-from .models import Brand, CarModel, Owner, CarOwners
+from .forms import LoginForm, NewBrandForm, NewModelForm, AddCarsHistoryForm, ForgotPassForm, RegisterUserForm
+from .models import Brand, CarModel, Profile, CarOwners
 
 
 class IndexView(View):
@@ -42,6 +42,32 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('/')
+
+class ForgotPassView(View):
+    def get(self, request):
+        form = ForgotPassForm()
+        return render(request, 'rate_a_car_app/new-password.html', {'form':form})
+
+    def post(self, request):
+        form = ForgotPassForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['new_pass1'] != form.cleaned_data['new_pass2']:
+                form = ForgotPassForm()
+                return render(request, 'rate_a_car_app/new-password.html', {'form': form, 'error':'Hasła muszą być identyczne'})
+            else:
+                user = User.objects.get(username=form.cleaned_data['user'])
+                user.set_password(form.cleaned_data['new_pass1'])
+                user.save()
+                return redirect('/login/')
+        else:
+            form = ForgotPassForm()
+            return render(request, 'rate_a_car_app/new-password.html', {'form': form, 'error':'Somethings wrong'})
+
+class RegisterView(View):
+    def get(self, request):
+        form_user = RegisterUserForm()
+        return render(request, 'rate_a_car_app/register.html', {'form_user':form_user})
+
 
 class NewBrandView(LoginRequiredMixin, View):
     login_url = '/login'
@@ -127,7 +153,7 @@ class AddCarHistoryView(View):
         if form.is_valid():
             car = form.cleaned_data['car']
             CarOwners.objects.create(car_id=car.id,
-                                     owner=Owner.ob,
+                                     owner=Profile.ob,
                                      use_from=form.cleaned_data['use_from'],
                                      use_to=form.cleaned_data['use_to'])
             return redirect(f"/profile/history/{user.username}/")

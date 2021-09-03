@@ -2,6 +2,8 @@ from datetime import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 RATE_CHOICE = {
     (1, "*"),
@@ -17,10 +19,23 @@ RATE_CHOICE = {
 }
 
 
-class Owner(models.Model):
+class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    car_history = models.ManyToManyField('CarModel', through='CarOwners')
-    rates = models.ForeignKey('Rate', on_delete=models.CASCADE)
+    car_history = models.ManyToManyField('CarModel', through='CarOwners', null=True)
+    rates = models.ForeignKey('Rate', on_delete=models.CASCADE, null=True)
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+
+    @receiver(post_save, sender=User, dispatch_uid='save_new_user_profile')
+    def save_profile(sender, instance, created, **kwargs):
+        user = instance
+        if created:
+            profile = Profile(user=user)
+            profile.save()
 
 
 class Brand(models.Model):
@@ -41,17 +56,17 @@ class CarModel(models.Model):
     production_to = models.CharField(null=True, verbose_name='Produkcja do', default=' - ', max_length=4)
     rate = models.ForeignKey('Rate', on_delete=models.CASCADE, null=True)
     opinions = models.ForeignKey('Notice', on_delete=models.CASCADE, null=True)
-    owners = models.ManyToManyField(Owner, through='CarOwners')
+    owners = models.ManyToManyField(Profile, through='CarOwners')
 
     def __str__(self):
         return f'{self.brand} {self.model}({self.version})'
 
 
 class Rate(models.Model):
-    endurance = models.IntegerField(choices=RATE_CHOICE, verbose_name='Wytrzymałość')
-    operation_cost = models.IntegerField(choices=RATE_CHOICE, verbose_name='Koszty utrzymania')
-    leading = models.IntegerField(choices=RATE_CHOICE, verbose_name='Prowadzenie')
-    design = models.IntegerField(choices=RATE_CHOICE, verbose_name='Wygląd')
+    endurance = models.IntegerField(choices=RATE_CHOICE, verbose_name='Wytrzymałość', null=True)
+    operation_cost = models.IntegerField(choices=RATE_CHOICE, verbose_name='Koszty utrzymania', null=True)
+    leading = models.IntegerField(choices=RATE_CHOICE, verbose_name='Prowadzenie', null=True)
+    design = models.IntegerField(choices=RATE_CHOICE, verbose_name='Wygląd', null=True)
 
 
 class Notice(models.Model):
@@ -61,7 +76,7 @@ class Notice(models.Model):
 
 class CarOwners(models.Model):
     car = models.ForeignKey(CarModel, on_delete=models.CASCADE, verbose_name='Samochód')
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     use_from = models.IntegerField(null=False, verbose_name='Od')
     use_to = models.CharField(default='-', max_length=4, verbose_name='Do')
     notice = models.ForeignKey(Notice, on_delete=models.CASCADE, null=True)
