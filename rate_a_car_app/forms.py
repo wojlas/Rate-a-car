@@ -6,12 +6,16 @@ from .models import Brand, CarModel, CarOwners, Profile
 
 
 class NewBrandForm(ModelForm):
+    """Create new brand, based on model Brand"""
     class Meta:
         model = Brand
         fields = '__all__'
 
 
 class NewModelForm(ModelForm):
+    """Create new model,
+    select brand from list and type model informations"""
+
     class Meta:
         model = CarModel
         fields = ['brand', 'model', 'version', 'production_from', 'production_to']
@@ -19,10 +23,12 @@ class NewModelForm(ModelForm):
 
 
 class LoginForm(forms.Form):
+    """Form for user login"""
     login = forms.CharField(max_length=32, label='Login')
     password = forms.CharField(widget=forms.PasswordInput, label='Hasło')
 
 class ForgotPassForm(forms.Form):
+    """Form for reset user password"""
     user = forms.CharField(label='Login', max_length=32)
     new_pass1 = forms.CharField(widget=forms.PasswordInput, label='Nowe hasło')
     new_pass2 = forms.CharField(widget=forms.PasswordInput, label='Powtórz hasło')
@@ -34,22 +40,24 @@ class ForgotPassForm(forms.Form):
     #     return cleaned_data
 
 class RegisterUserForm(ModelForm):
+    """Form for register new user"""
     password1 = forms.CharField(widget=forms.PasswordInput, label='Hasło')
     password2 = forms.CharField(widget=forms.PasswordInput, label='Powtórz hasło')
     class Meta:
         model = User
         fields = ['username', 'password1', 'password2', 'email', 'first_name', 'last_name']
 
-    def clean(self):
-        cleaned_data = super(RegisterUserForm, self).clean()
-        password1 = cleaned_data.get("password1")
-        password2 = cleaned_data.get("password2")
-
-        if password1 != password2:
-            raise forms.ValidationError('Hasła muszą być identyczne')
+    # def clean(self):
+    #     cleaned_data = super(RegisterUserForm, self).clean()
+    #     password1 = cleaned_data.get("password1")
+    #     password2 = cleaned_data.get("password2")
+    #
+    #     if password1 != password2:
+    #         raise forms.ValidationError('Hasła muszą być identyczne')
 
 
 class AddCarsHistoryForm(ModelForm):
+    """Form for add car to user history"""
     class Meta:
         model = CarOwners
         fields = ['car','use_from', 'use_to']

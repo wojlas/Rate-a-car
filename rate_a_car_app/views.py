@@ -11,6 +11,8 @@ from .models import Brand, CarModel, Profile, CarOwners
 
 
 class IndexView(View):
+    """Display aplications main page
+    """
     def get(self, request):
         new_cars = CarModel.objects.order_by('brand')
         paginator = Paginator(new_cars, 10)
@@ -21,11 +23,14 @@ class IndexView(View):
 
 
 class LoginView(View):
+    """View used to login user"""
     def get(self, request):
+        """Render form"""
         form = LoginForm()
         return render(request, 'rate_a_car_app/login.html', {'form': form})
 
     def post(self, request):
+        """if user exist and password is correct user is logged in and redirect to main page"""
         form = LoginForm(request.POST)
         if form.is_valid():
             user = authenticate(username=form.cleaned_data['login'], password=form.cleaned_data['password'])
@@ -39,16 +44,22 @@ class LoginView(View):
 
 
 class LogoutView(View):
+    """logout user"""
     def get(self, request):
         logout(request)
         return redirect('/')
 
 class ForgotPassView(View):
+    """View to reset password"""
     def get(self, request):
+        """View render form with 3 inputs,
+        username and 2 password input"""
         form = ForgotPassForm()
         return render(request, 'rate_a_car_app/new-password.html', {'form':form})
 
     def post(self, request):
+        """Set password for user type in username field, if password fields isn't the same,
+        user is informed about it"""
         form = ForgotPassForm(request.POST)
         if form.is_valid():
             if form.cleaned_data['new_pass1'] != form.cleaned_data['new_pass2']:
@@ -64,12 +75,33 @@ class ForgotPassView(View):
             return render(request, 'rate_a_car_app/new-password.html', {'form': form, 'error':'Somethings wrong'})
 
 class RegisterView(View):
+    """new user register"""
     def get(self, request):
         form_user = RegisterUserForm()
         return render(request, 'rate_a_car_app/register.html', {'form_user':form_user})
 
+    def post(self, request):
+        form = RegisterUserForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['password1'] == form.cleaned_data['password2']:
+                user = form.cleaned_data
+                User.objects.create(username=form.cleaned_data['username'],
+                                    password=form.cleaned_data['password1'],
+                                    first_name=form.cleaned_data['first_name'],
+                                    last_name=form.cleaned_data['last_name'],
+                                    email=form.cleaned_data['email'])
+                return redirect('/')
+            else:
+                form_user = RegisterUserForm()
+                return render(request, 'rate_a_car_app/register.html', {'form_user': form_user, 'error':'Hasła muszą być identyczne'})
+        else:
+            form_user = RegisterUserForm()
+            return render(request, 'rate_a_car_app/register.html', {'form_user': form_user})
+
 
 class NewBrandView(LoginRequiredMixin, View):
+    """View adding new brand to database
+    only for loged users"""
     login_url = '/login'
     redirect_field_name = '/create'
     def get(self, request):
@@ -91,6 +123,8 @@ class NewBrandView(LoginRequiredMixin, View):
 
 
 class NewModelView(LoginRequiredMixin, View):
+    """Adding new car model with model name, version and years of production
+    only for loged users"""
     login_url = '/login'
     redirect_field_name = 'new-model'
     def get(self, request):
@@ -112,12 +146,18 @@ class NewModelView(LoginRequiredMixin, View):
 
 
 class BrowseCarView(View):
+    """Most important view in project
+
+    User can browse a car filtering by brand and simply skip to car details"""
     def get(self, request):
         ctx = {'new_car': CarModel.objects.all().order_by('brand'),
                'brands':Brand.objects.all()}
         return render(request, 'rate_a_car_app/cars.html', ctx)
 
 class BrowseBrandModelsView(View):
+    """Based on BrowseCarView
+
+    Car list filtering by brand"""
     def get(self, request, brand_name):
         brand = Brand.objects.get(brand=brand_name)
         ctx = {'cars': CarModel.objects.filter(brand=brand.id).order_by('model'),
@@ -126,12 +166,18 @@ class BrowseBrandModelsView(View):
         return render(request, 'rate_a_car_app/brand-cars.html', ctx)
 
 class CarDetailsView(View):
+    """Car details
+
+    Information about car, rates, notices"""
     def get(self, request, version, car):
         car = CarModel.objects.get(model=car, version=version)
         ctx = {'car':car}
         return render(request, 'rate_a_car_app/car-details.html', ctx)
 
 class UserProfileView(View):
+    """Loged user profile
+
+    View allows user to browse user informations, car history and last notices"""
     def get(self, request, user):
         user = User.objects.get(username=user)
         ctx = {'user': user,
@@ -139,6 +185,7 @@ class UserProfileView(View):
         return render(request, 'rate_a_car_app/user-view.html', ctx)
 
 class AddCarHistoryView(View):
+    """Add car to user history"""
     def get(self, request, user):
         user = User.objects.get(username=user)
         form = AddCarsHistoryForm(initial={'owner': user.id})
