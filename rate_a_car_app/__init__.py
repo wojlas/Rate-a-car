@@ -1,0 +1,1 @@
+default_app_config = 'rate_a_car_app.apps.RateACarAppConfig'

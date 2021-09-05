@@ -84,12 +84,12 @@ class RegisterView(View):
         form = RegisterUserForm(request.POST)
         if form.is_valid():
             if form.cleaned_data['password1'] == form.cleaned_data['password2']:
-                user = form.cleaned_data
-                User.objects.create(username=form.cleaned_data['username'],
+                user = User.objects.create(username=form.cleaned_data['username'],
                                     password=form.cleaned_data['password1'],
                                     first_name=form.cleaned_data['first_name'],
                                     last_name=form.cleaned_data['last_name'],
                                     email=form.cleaned_data['email'])
+                Profile.objects.create(user=user)
                 return redirect('/')
             else:
                 form_user = RegisterUserForm()
@@ -179,9 +179,9 @@ class UserProfileView(View):
 
     View allows user to browse user informations, car history and last notices"""
     def get(self, request, user):
-        user = User.objects.get(username=user)
-        ctx = {'user': user,
-               'cars':CarOwners.objects.filter(owner=user.pk)}
+        user_obj = User.objects.get(username=user)
+        ctx = {'user': user_obj,
+               'cars':CarOwners.objects.filter(owner=Profile.objects.get(user=user_obj))}
         return render(request, 'rate_a_car_app/user-view.html', ctx)
 
 class AddCarHistoryView(View):
@@ -189,21 +189,22 @@ class AddCarHistoryView(View):
     def get(self, request, user):
         user = User.objects.get(username=user)
         form = AddCarsHistoryForm(initial={'owner': user.id})
-        ctx = {'user_car_history': CarOwners.objects.filter(owner=user.id),
+        ctx = {'user_car_history': CarOwners.objects.filter(owner=Profile.objects.get(user=user)),
                'add_car': form}
         return render(request, 'rate_a_car_app/car-history.html', ctx)
 
     def post(self, request, user):
-        user = User.objects.get(username=user)
-        owner = CarOwners.objects.get(user=user)
+
+        user_obj = User.objects.get(username=user)
+        profile = Profile.objects.get(user=user_obj)
         form = AddCarsHistoryForm(request.POST)
         if form.is_valid():
             car = form.cleaned_data['car']
             CarOwners.objects.create(car_id=car.id,
-                                     owner=Profile.ob,
+                                     owner=profile,
                                      use_from=form.cleaned_data['use_from'],
                                      use_to=form.cleaned_data['use_to'])
-            return redirect(f"/profile/history/{user.username}/")
+            return redirect(f"/profile/history/{user}/")
         else:
             user = User.objects.get(username=user)
             form = AddCarsHistoryForm(initial={'owner': user.id})

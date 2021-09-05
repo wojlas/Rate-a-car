@@ -14,9 +14,9 @@
 {% endblock %}
 
 {% block container2 %}
-    <h4>Historia pojazdów {{ user.username }}</h4> <br><br>
+    <h4>Historia pojazdów {{ user.username }}</h4> <br>
     {% for car in user_car_history %}
-        {{ forloop.counter }}. {{ car.car.brand }} {{ car.car.model }}({{ car.car.version }}) {{ car.use_from }}-{{ car.use_to }}
+        {{ forloop.counter }}. <a href="{% url 'car-details' car.car.model car.car.version %}"> {{ car.car }}</a>{{ car.use_from }}-{{ car.use_to }}<br>
 
     {% endfor %}
 {% endblock %}

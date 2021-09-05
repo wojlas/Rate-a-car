@@ -16,7 +16,8 @@
 {% block container2 %}
     Historia pojazdów: <br>
      {% for car in cars %}
-        {{ car }} {{ car.use_from }} - {{ car.use_to }} <br>
+        {{ forloop.counter }}. <a href="{% url 'car-details' car.car.model car.car.version %}">
+         {{ car.car }} </a> {{ car.use_from }} - {{ car.use_to }} <br>
      {% endfor %}
 {% endblock %}
 
