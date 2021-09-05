@@ -2,7 +2,7 @@ import django.forms as forms
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from .models import Brand, CarModel, CarOwners, Profile
+from .models import Brand, CarModel, CarOwners, Profile, Rate
 
 
 class NewBrandForm(ModelForm):
@@ -63,3 +63,11 @@ class AddCarsHistoryForm(ModelForm):
         fields = ['car','use_from', 'use_to']
         # use_to = forms.CharField(widget=forms.IntegerField, max_length=4)
         owner = forms.ModelChoiceField(widget=forms.IntegerField, queryset=User.objects.all())
+
+class RateForm(ModelForm):
+    """Form for car voted"""
+    class Meta:
+        model = Rate
+        exclude = ['carmodel', 'user']
+        carmodel = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=CarModel.objects.all())
+        user = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=User.objects.all())

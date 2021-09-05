@@ -11,3 +11,35 @@
     Lata produkcji: {{ car.production_from }} - {{ car.production_to }} <br>
 
 {% endblock %}
+
+{% block container2 %}
+    Podsumowanie: <br>
+        Wytrzymałość: {{ summary_endurance }} <br>
+        Koszty operacyjne: {{ summary_cost }} <br>
+        Prowadzenie: {{ summary_leading }} <br>
+        Wygląd: {{ summary_design }} <br>
+
+
+{% endblock %}
+
+{% block container3 %}
+    <form method="post">
+    {% csrf_token %}
+    <table>
+        {{ rate_form.as_table }}
+    </table>
+    <input type="submit" value="Głosuj">
+    </form>
+
+{% endblock %}
+
+{% block container6 %}
+    Oceny: <br>
+    {% for rate in rates %}
+        {{ rate.user }}: <br>
+        Wytrzymałość: {{ rate.endurance }} <br>
+        Koszty: {{ rate.operation_cost }} <br>
+        Prowadzenie: {{ rate.leading }} <br>
+        Wygląd: {{ rate.design }} <br><br>
+    {% endfor %}
+{% endblock %}

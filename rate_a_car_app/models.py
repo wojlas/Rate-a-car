@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-RATE_CHOICE = {
+RATE_CHOICE = [
     (1, "*"),
     (2, "**"),
-    (3, "****"),
+    (3, "***"),
     (4, "****"),
     (5, "******"),
     (6, "*******"),
@@ -12,14 +12,14 @@ RATE_CHOICE = {
     (8, "*********"),
     (9, "**********"),
     (10, "***********"),
-}
+]
 
 
 class Profile(models.Model):
     """Model extend User by one-to-one field"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     car_history = models.ManyToManyField('CarModel', through='CarOwners', null=True)
-    rates = models.ForeignKey('Rate', on_delete=models.CASCADE, null=True)
+
 
 
 class Brand(models.Model):
@@ -41,7 +41,6 @@ class CarModel(models.Model):
     version = models.CharField(max_length=32, verbose_name='Wersja', null=True)
     production_from = models.IntegerField(null=False, verbose_name='Produkcja od')
     production_to = models.CharField(null=True, verbose_name='Produkcja do', default=' - ', max_length=4)
-    rate = models.ForeignKey('Rate', on_delete=models.CASCADE, null=True)
     opinions = models.ForeignKey('Notice', on_delete=models.CASCADE, null=True)
     owners = models.ManyToManyField(Profile, through='CarOwners')
 
@@ -55,6 +54,10 @@ class Rate(models.Model):
     operation_cost = models.IntegerField(choices=RATE_CHOICE, verbose_name='Koszty utrzymania', null=True)
     leading = models.IntegerField(choices=RATE_CHOICE, verbose_name='Prowadzenie', null=True)
     design = models.IntegerField(choices=RATE_CHOICE, verbose_name='Wygląd', null=True)
+    carmodel = models.ForeignKey(CarModel, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+
 
 
 class Notice(models.Model):

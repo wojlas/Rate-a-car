@@ -24,7 +24,9 @@
 {% block container3 %}
     Ostatnie opinie: <br>
     {% for car in cars %}
+        {% if car.notice %}
         <h4>{{ car.notice.date }} {{ car.car }}</h4> <br>
         {{ car.notice.content }}
+        {% endif %}
     {% endfor %}
 {% endblock %}

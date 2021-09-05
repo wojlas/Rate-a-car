@@ -1,13 +1,15 @@
-from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth import logout, authenticate, login, get_user_model
 from django.contrib.auth.models import User
+from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.core.paginator import Paginator
 # Create your views here.
 from django.views import View
 
-from .forms import LoginForm, NewBrandForm, NewModelForm, AddCarsHistoryForm, ForgotPassForm, RegisterUserForm
-from .models import Brand, CarModel, Profile, CarOwners
+from .forms import LoginForm, NewBrandForm, NewModelForm, AddCarsHistoryForm, ForgotPassForm, RegisterUserForm, RateForm
+from .models import Brand, CarModel, Profile, CarOwners, Rate
+
 
 
 class IndexView(View):
@@ -171,8 +173,38 @@ class CarDetailsView(View):
     Information about car, rates, notices"""
     def get(self, request, version, car):
         car = CarModel.objects.get(model=car, version=version)
-        ctx = {'car':car}
+        rate_form = RateForm(initial={'carmodel': car,
+                                      'user': request.user})
+        rates = Rate.objects.filter(carmodel=car)
+        ctx = {'car':car,
+               'rate_form':rate_form,
+               'rates':rates,
+               'summary_design': sum([rate.design for rate in rates])/len([rate.design for rate in rates]),
+               'summary_endurance': sum([rate.endurance for rate in rates])/len([rate.endurance for rate in rates]),
+               'summary_cost': sum([rate.operation_cost for rate in rates])/len([rate.operation_cost for rate in rates]),
+               'summary_leading': sum([rate.leading for rate in rates])/len([rate.leading for rate in rates])}
+
         return render(request, 'rate_a_car_app/car-details.html', ctx)
+
+    def post(self, request, car, version):
+        form = RateForm(request.POST)
+        car = CarModel.objects.get(model=car, version=version)
+        if form.is_valid():
+            Rate.objects.create(design=form.cleaned_data['design'],
+                                leading=form.cleaned_data['leading'],
+                                operation_cost=form.cleaned_data['operation_cost'],
+                                endurance=form.cleaned_data['endurance'],
+                                carmodel=car,
+                                user=request.user)
+            return redirect(f"/cars/{car.model}/{version}/")
+        else:
+            rate_form = RateForm()
+            car = CarModel.objects.get(model=car, version=version)
+            ctx = {'car': car,
+                   'rate_form': rate_form}
+
+            return render(request, 'rate_a_car_app/car-details.html', ctx)
+
 
 class UserProfileView(View):
     """Loged user profile
