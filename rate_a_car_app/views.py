@@ -11,6 +11,13 @@ from .forms import LoginForm, NewBrandForm, NewModelForm, AddCarsHistoryForm, Fo
 from .models import Brand, CarModel, Profile, CarOwners, Rate
 
 
+def average_rates(rate, rate_query):
+    result = sum([rate.rate_query for rate in rate])/len([rate.rate_query for rate in rate])
+    if isinstance(result, float):
+        return result
+    else:
+        return 0
+
 
 class IndexView(View):
     """Display aplications main page
@@ -175,14 +182,18 @@ class CarDetailsView(View):
         car = CarModel.objects.get(model=car, version=version)
         rate_form = RateForm(initial={'carmodel': car,
                                       'user': request.user})
-        rates = Rate.objects.filter(carmodel=car)
+        rates = Rate.objects.filter(carmodel=car)[:10]
+        if len([rate.design for rate in rates]) > 0:
+            division_by = len([rate.design for rate in rates])
+        else:
+            division_by = 1
         ctx = {'car':car,
                'rate_form':rate_form,
                'rates':rates,
-               'summary_design': sum([rate.design for rate in rates])/len([rate.design for rate in rates]),
-               'summary_endurance': sum([rate.endurance for rate in rates])/len([rate.endurance for rate in rates]),
-               'summary_cost': sum([rate.operation_cost for rate in rates])/len([rate.operation_cost for rate in rates]),
-               'summary_leading': sum([rate.leading for rate in rates])/len([rate.leading for rate in rates])}
+               'summary_design': sum([rate.design for rate in rates])/division_by,
+               'summary_endurance': sum([rate.endurance for rate in rates])/division_by,
+               'summary_cost': sum([rate.operation_cost for rate in rates])/division_by,
+               'summary_leading': sum([rate.leading for rate in rates])/division_by}
 
         return render(request, 'rate_a_car_app/car-details.html', ctx)
 

@@ -56,6 +56,7 @@ class Rate(models.Model):
     design = models.IntegerField(choices=RATE_CHOICE, verbose_name='Wygląd', null=True)
     carmodel = models.ForeignKey(CarModel, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    date = models.DateTimeField(auto_now_add=True)
 
 
 

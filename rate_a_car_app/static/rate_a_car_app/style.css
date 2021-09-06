@@ -97,5 +97,17 @@ ol > li:hover > a {
 
 .container1:first-child {
     margin-right: 30px;
+    padding: 10px;
+    border: #DDDDDD solid;
+}
+
+.container2 {
+    float: left;
+}
+
+.container2:first-child{
+    margin-right: 30px;
+    padding: 10px;
+    border: #DDDDDD solid;
 }
 
