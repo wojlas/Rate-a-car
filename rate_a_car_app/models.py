@@ -2,23 +2,23 @@ from django.contrib.auth.models import User
 from django.db import models
 
 RATE_CHOICE = [
-    (1, "*"),
-    (2, "**"),
-    (3, "***"),
-    (4, "****"),
-    (5, "******"),
-    (6, "*******"),
-    (7, "********"),
-    (8, "*********"),
-    (9, "**********"),
-    (10, "***********"),
+    (1, "(1)*"),
+    (2, "(2)**"),
+    (3, "(3)***"),
+    (4, "(4)****"),
+    (5, "(5)******"),
+    (6, "(6)*******"),
+    (7, "(7)********"),
+    (8, "(8)*********"),
+    (9, "(9)**********"),
+    (10, "(10)***********"),
 ]
 
 
 class Profile(models.Model):
     """Model extend User by one-to-one field"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    car_history = models.ManyToManyField('CarModel', through='CarOwners', null=True)
+    car_history = models.ManyToManyField('CarModel', through='CarOwners')
 
 
 

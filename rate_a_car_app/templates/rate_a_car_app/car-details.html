@@ -17,13 +17,14 @@
 
 
         Wytrzymałość: {{ summary_endurance }} <br>
-        Koszty operacyjne: {{ summary_cost }} <br>
+        Koszty utrzymania: {{ summary_cost }} <br>
         Prowadzenie: {{ summary_leading }} <br>
         Wygląd: {{ summary_design }} <br>
 
 {% endblock %}
 
 {% block container3 %}
+    {% if rate_form %}
     <form method="post">
     {% csrf_token %}
     <table>
@@ -31,13 +32,13 @@
     </table>
     <input type="submit" value="Głosuj">
     </form>
-
+    {% endif %}
 {% endblock %}
 
 {% block container6 %}
     Oceny: <br>
     {% for rate in rates %}
-        {{ rate.user }}: <br>
+        {{ rate.user }}({{ rate.date.date }}):<br>
         Wytrzymałość: {{ rate.endurance }} <br>
         Koszty: {{ rate.operation_cost }} <br>
         Prowadzenie: {{ rate.leading }} <br>
