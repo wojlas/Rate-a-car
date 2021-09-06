@@ -235,8 +235,9 @@ class UserProfileView(View):
 
     def get(self, request, user):
         user_obj = User.objects.get(username=user)
+        cars = CarOwners.objects.filter(owner=Profile.objects.get(user=user_obj))
         ctx = {'user': user_obj,
-               'cars': CarOwners.objects.filter(owner=Profile.objects.get(user=user_obj))}
+               'cars': cars,}
         return render(request, 'rate_a_car_app/user-view.html', ctx)
 
 
@@ -268,3 +269,11 @@ class AddCarHistoryView(View):
             ctx = {'user_car_history': CarOwners.objects.filter(owner=user.id),
                    'add_car': form}
             return render(request, 'rate_a_car_app/car-history.html', ctx)
+
+
+class RemoveFromHistoryView(View):
+    def post(self, request, user, car, version):
+        user_obj = User.objects.get(username=user)
+        car_obj = CarModel.objects.get(model=car, version=version)
+        CarOwners.objects.get(owner=user_obj.profile, car=car_obj).delete()
+        return redirect(f"/profile/history/{user}/")

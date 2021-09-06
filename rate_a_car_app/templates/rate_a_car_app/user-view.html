@@ -10,7 +10,7 @@
     Nazwisko: {{ user.last_name }} <br>
     Email: {{ user.email }} <br>
     Data dołączenia: {{ user.date_joined.date }} <br>
-    Liczba aut:
+    Liczba aut: {{ user.profile.car_history.count }}
 {% endblock %}
 
 {% block container2 %}
