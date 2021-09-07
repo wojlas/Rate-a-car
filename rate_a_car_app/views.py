@@ -198,13 +198,18 @@ class CarDetailsView(View):
             division_by = len([rate.design for rate in rates])
         else:
             division_by = 1
+        summary_design = sum([rate.design for rate in rates]) / division_by
+        summary_endurance = sum([rate.endurance for rate in rates]) / division_by
+        summary_cost = sum([rate.operation_cost for rate in rates]) / division_by
+        summary_leading = sum([rate.leading for rate in rates]) / division_by
         ctx = {'car': car,
                'rate_form': rate_form,
                'rates': rates,
-               'summary_design': sum([rate.design for rate in rates]) / division_by,
-               'summary_endurance': sum([rate.endurance for rate in rates]) / division_by,
-               'summary_cost': sum([rate.operation_cost for rate in rates]) / division_by,
-               'summary_leading': sum([rate.leading for rate in rates]) / division_by}
+               'summary_design': summary_design,
+               'summary_endurance': summary_endurance,
+               'summary_cost': summary_cost,
+               'summary_leading': summary_leading,
+               'avarage': round((summary_leading+summary_cost+summary_design+summary_endurance)/4, 2)}
 
         return render(request, 'rate_a_car_app/car-details.html', ctx)
 

@@ -14,12 +14,12 @@
 
 {% block container2 %}
     Podsumowanie: <br>
-
-
+    <h4>Średnia: {{ avarage }}</h4>
         Wytrzymałość: {{ summary_endurance }} <br>
         Koszty utrzymania: {{ summary_cost }} <br>
         Prowadzenie: {{ summary_leading }} <br>
         Wygląd: {{ summary_design }} <br>
+
 
 {% endblock %}
 
@@ -38,7 +38,7 @@
 {% block container6 %}
     Oceny: <br>
     {% for rate in rates %}
-        {{ rate.user }}({{ rate.date.date }}):<br>
+        <a href="{% url 'user-profile' rate.user %}"> {{ rate.user }}</a>({{ rate.date.date }}):<br>
         Wytrzymałość: {{ rate.endurance }} <br>
         Koszty: {{ rate.operation_cost }} <br>
         Prowadzenie: {{ rate.leading }} <br>
