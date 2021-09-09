@@ -91,21 +91,15 @@ ol > li:hover > a {
     justify-content: center;
 }
 
-.container1 {
+.grid-content > .container1 {
     float: left;
-}
-
-.container1 {
     margin-right: 30px;
     padding: 10px;
     border: #DDDDDD solid;
 }
 
-.container2 {
+.grid-content > .container2 {
     float: left;
-}
-
-.container2{
     margin-right: 30px;
     padding: 10px;
     border: #DDDDDD solid;

@@ -277,6 +277,9 @@ class AddCarHistoryView(View):
 
 
 class RemoveFromHistoryView(View):
+    """Class remove car from user cars history
+
+    After remove we're redirected to user profile view"""
     def post(self, request, user, car, version):
         user_obj = User.objects.get(username=user)
         car_obj = CarModel.objects.get(model=car, version=version)
