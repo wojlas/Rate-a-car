@@ -44,6 +44,7 @@ class CarModel(models.Model):
     production_to = models.CharField(null=True, verbose_name='Produkcja do', default=' - ', max_length=4)
     opinions = models.ForeignKey('Notice', on_delete=models.CASCADE, null=True)
     owners = models.ManyToManyField(Profile, through='CarOwners')
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.brand} {self.model}({self.version})'

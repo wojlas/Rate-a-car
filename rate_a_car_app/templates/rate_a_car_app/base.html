@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{% static 'rate_a_car_app/style.css' %}">
 </head>
 <body>
-<div class="main-menu-bar">
+<div class="main-menu-bar" id="top">
     <div class="main-logo"><img src="{% static 'rate_a_car_app/cars.png' %}" width="220px" height="140px"></div>
     <div class="main-bar">
         <ol>
@@ -88,4 +88,16 @@
 
 <script src="{% static 'rate_a_car_app/jsscripts.js' %}"></script>
 </body>
+<footer id="footer">
+    Pomysł i wykonanie Wojciech Łaska, wszelkie prawa zastrzeżone.
+    {% now "d.m.Y " %}
+    {% if user.is_authenticated %}
+    Zalogowano jako <a href="{% url 'user-profile' user.username %}">{{ user.username }}</a>
+
+    <a href="{% url 'logout' %}">Wyloguj</a>
+    {% endif %}
+    <a href="#">Kontakt</a>
+    <a href="#">FAQ</a>
+    <a href="#top">Do góry</a>
+</footer>
 </html>

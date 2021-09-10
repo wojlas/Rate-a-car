@@ -5,7 +5,7 @@ Rate a Car
 {% block container2 %}
         {% for car in cars %}
         <ul>
-            <li>{{ car.brand }} {{ car.name }} {{ car.version }} {{ car.production_from }} - {{ car.production_to }}</li>
+            <li>{{ car.brand }} {{ car.name }} {{ car.version }}</li>
         </ul>
     {% endfor %}
 
@@ -28,4 +28,27 @@ Rate a Car
 </div>
 
 
+{% endblock %}
+
+{% block container3 %}
+    <h4>Najnowsze opinie:</h4>
+    {% for notice in new_notices %}
+        <h5><a href="{% url 'user-profile' notice.author.username %}">{{ notice.author.username }}</a>
+            <a href="{% url 'car-details' notice.car.model notice.car.version %}"> {{ notice.car }} </a></h5>
+        {{ notice.content }} <br><br>
+
+    {% endfor %}
+{% endblock %}
+
+{% block container6 %}
+    <h4>Najnowsze oceny:</h4>
+    {% for rate in new_rates %}
+        <h5>
+            <a href="{% url 'user-profile' rate.user %}"> {{ rate.user.username }}</a>
+            <a href="{% url 'car-details' rate.carmodel.model rate.carmodel.version %}"> {{ rate.carmodel }} </a></h5>
+        Wytrzymałość: {{ rate.endurance }} <br>
+        Koszty eksploatacji: {{ rate.operation_cost }} <br>
+        Prowadzenie: {{ rate.leading }} <br>
+        Wygląd: {{ rate.design }} <br>
+    {% endfor %}
 {% endblock %}

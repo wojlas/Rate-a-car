@@ -1,6 +1,5 @@
-from django.contrib import messages
-from django.contrib.auth import logout, authenticate, login, update_session_auth_hash
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
@@ -17,11 +16,15 @@ class IndexView(View):
     """
 
     def get(self, request):
-        new_cars = CarModel.objects.order_by('brand')
+        new_cars = CarModel.objects.order_by('-date')
+        new_notices = Notice.objects.order_by('-date')[:10]
+        new_rates = Rate.objects.order_by('-date')[:10]
         paginator = Paginator(new_cars, 10)
         page = request.GET.get('page')
         new_cars_pagination = paginator.get_page(page)
-        cnt = {'cars': new_cars_pagination}
+        cnt = {'cars': new_cars_pagination,
+               'new_notices': new_notices,
+               'new_rates': new_rates}
         return render(request, 'rate_a_car_app/index.html', cnt)
 
 
@@ -93,7 +96,7 @@ class RegisterView(View):
         form = RegisterUserForm(request.POST)
         if form.is_valid():
             if form.cleaned_data['password1'] == form.cleaned_data['password2']:
-                user = User.objects.create(username=form.cleaned_data['username'],
+                user = User.objects.create_user(username=form.cleaned_data['username'],
                                            password=form.cleaned_data['password1'],
                                            first_name=form.cleaned_data['first_name'],
                                            last_name=form.cleaned_data['last_name'],
@@ -101,7 +104,7 @@ class RegisterView(View):
                 Profile.objects.create(user=user)
                 group = Group.objects.get(name='regular')
                 group.user_set.add(user)
-                return redirect('/')
+                return redirect('/login/')
             else:
                 form_user = RegisterUserForm()
                 return render(request, 'rate_a_car_app/register.html',
@@ -111,11 +114,9 @@ class RegisterView(View):
             return render(request, 'rate_a_car_app/register.html', {'form_user': form_user, 'error': 'Nazwa zajęta'})
 
 
-class NewBrandView(UserPassesTestMixin, View):
+class NewBrandView(View):
     """View adding new brand to database
-    only for superusers"""
-    def test_func(self):
-        return self.request.user.is_superuser
+    """
 
     def post(self, request):
         add_brand = NewBrandForm(request.POST)
@@ -214,7 +215,7 @@ class CarDetailsView(View):
                'summary_endurance': summary_endurance,
                'summary_cost': summary_cost,
                'summary_leading': summary_leading,
-               'avarage': round((summary_leading+summary_cost+summary_design+summary_endurance)/4, 2)}
+               'avarage': round((summary_leading + summary_cost + summary_design + summary_endurance) / 4, 2)}
 
         return render(request, 'rate_a_car_app/car-details.html', ctx)
 
@@ -237,6 +238,7 @@ class CarDetailsView(View):
 
             return render(request, 'rate_a_car_app/car-details.html', ctx)
 
+
 class AddNoticeView(LoginRequiredMixin, View):
 
     def post(self, request, car, version):
@@ -244,13 +246,11 @@ class AddNoticeView(LoginRequiredMixin, View):
         car = CarModel.objects.get(model=car, version=version)
         if form.is_valid():
             Notice.objects.create(author=request.user,
-                                  car = car,
+                                  car=car,
                                   content=form.cleaned_data['content'])
             return redirect(f"/cars/{car.model}/{car.version}/")
         else:
             return redirect(f"/cars/{car.model}/{car.version}/")
-
-
 
 
 class UserProfileView(View):
@@ -264,7 +264,7 @@ class UserProfileView(View):
         last_notices = Notice.objects.filter(author=user_obj).order_by('-date')
         ctx = {'user': user_obj,
                'cars': cars,
-               'notices':last_notices}
+               'notices': last_notices}
         return render(request, 'rate_a_car_app/user-view.html', ctx)
 
 
@@ -298,18 +298,17 @@ class AddCarHistoryView(View):
             return render(request, 'rate_a_car_app/car-history.html', ctx)
 
 
-class RemoveFromHistoryView(UserPassesTestMixin, View):
+class RemoveFromHistoryView(View):
     """Class remove car from user cars history
 
     After remove we're redirected to user profile view"""
-    def test_func(self):
-        return self.request.user.is_superuser
 
     def post(self, request, user, car, version):
         user_obj = User.objects.get(username=user)
         car_obj = CarModel.objects.get(model=car, version=version)
         CarOwners.objects.get(owner=user_obj.profile, car=car_obj).delete()
         return redirect(f"/profile/history/{user}/")
+
 
 class SettingsView(View):
     def get(self, request):
@@ -347,22 +346,7 @@ class SettingsView(View):
         if 'password' in request.POST:
             form = SettingsChangePasswordForm(request.POST)
             if form.is_valid():
-
-                if request.user.password == form.cleaned_data['old_password']:
-                    if request.user.password == form.cleaned_data['password1']:
-                        form = SettingsDataForm(initial={'username': request.user.username,
-                                                         'first_name': request.user.first_name,
-                                                         'last_name': request.user.last_name,
-                                                         'email': request.user.email})
-                        new_password_form = SettingsChangePasswordForm()
-                        ctx = {'form': form,
-                               'new_pass': new_password_form,
-                               'error_pass': 'Nowe hasło musi się różnić od poprzedniego'}
-                        return render(request, 'rate_a_car_app/settings.html', ctx)
-                    else:
-                        request.user.set_password = form.cleaned_data['password1']
-                        return redirect('/settings/')
-                else:
+                if request.user.password == form.cleaned_data['password1']:
                     form = SettingsDataForm(initial={'username': request.user.username,
                                                      'first_name': request.user.first_name,
                                                      'last_name': request.user.last_name,
@@ -370,8 +354,12 @@ class SettingsView(View):
                     new_password_form = SettingsChangePasswordForm()
                     ctx = {'form': form,
                            'new_pass': new_password_form,
-                           'error_pass': 'Nieprawidłowe hasło'}
+                           'error_pass': 'Nowe hasło musi się różnić od poprzedniego'}
                     return render(request, 'rate_a_car_app/settings.html', ctx)
+                else:
+                    request.user.set_password = form.cleaned_data['password1']
+                    return redirect('/settings/')
+
 
 
 class DeleteAccount(LoginRequiredMixin, View):
@@ -380,4 +368,3 @@ class DeleteAccount(LoginRequiredMixin, View):
         u = request.user
         u.delete()
         return redirect('/')
-
