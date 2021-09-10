@@ -1,5 +1,5 @@
 from django.contrib.auth import logout, authenticate, login
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
@@ -108,11 +108,11 @@ class RegisterView(View):
             return render(request, 'rate_a_car_app/register.html', {'form_user': form_user, 'error': 'Nazwa zajęta'})
 
 
-class NewBrandView(LoginRequiredMixin, View):
+class NewBrandView(UserPassesTestMixin, View):
     """View adding new brand to database
-    only for loged users"""
-    login_url = '/login'
-    redirect_field_name = '/create'
+    only for superusers"""
+    def test_func(self):
+        return self.request.user.is_superuser
 
     def post(self, request):
         add_brand = NewBrandForm(request.POST)
@@ -234,7 +234,10 @@ class CarDetailsView(View):
 
             return render(request, 'rate_a_car_app/car-details.html', ctx)
 
-class AddNoticeView(View):
+class AddNoticeView(UserPassesTestMixin, View):
+    def test_func(self):
+        return self.request.user.is_superuser
+
     def post(self, request, car, version):
         form = NoticeForm(request.POST)
         car = CarModel.objects.get(model=car, version=version)
@@ -292,10 +295,13 @@ class AddCarHistoryView(View):
             return render(request, 'rate_a_car_app/car-history.html', ctx)
 
 
-class RemoveFromHistoryView(View):
+class RemoveFromHistoryView(UserPassesTestMixin, View):
     """Class remove car from user cars history
 
     After remove we're redirected to user profile view"""
+    def test_func(self):
+        return self.request.user.is_superuser
+
     def post(self, request, user, car, version):
         user_obj = User.objects.get(username=user)
         car_obj = CarModel.objects.get(model=car, version=version)
