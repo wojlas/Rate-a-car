@@ -15,7 +15,6 @@
             <li><a href="#">Auta</a>
                 <ul>
                     <li><a href="{% url 'cars' %}">Przeglądaj</a></li>
-                    <li><a href="{% url 'create-brand' %}">Dodaj markę</a></li>
                     <li><a href="{% url 'create-model' %}">Dodaj model</a></li>
                 </ul>
             </li>
@@ -50,7 +49,7 @@
         </ol>
     </div>
 </div>
-<div class="grid-content">
+<div class="grid-content first">
     <div class="container1 1">
         {% block container1 %}
         {% endblock %}
@@ -66,18 +65,18 @@
         {% endblock %}
     </div>
 </div>
-<div class="grid-content-second">
-    <div class="container2 1" style="float: left">
+<div class="grid-content second">
+    <div class="container2 1">
         {% block container4 %}
 
         {% endblock %}
     </div>
-    <div class="container2 2" style="float: left">
+    <div class="container2 2">
         {% block container5 %}
 
         {% endblock %}
     </div>
-    <div class="container3 3">
+    <div class="container2 3">
         {% block container6 %}
 
         {% endblock %}

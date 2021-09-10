@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path
 from rate_a_car_app.views import IndexView, LoginView, LogoutView, NewBrandView, NewModelView, BrowseCarView,\
     UserProfileView, CarDetailsView, BrowseBrandModelsView, AddCarHistoryView, ForgotPassView, RegisterView,\
-    RemoveFromHistoryView
+    RemoveFromHistoryView, AddNoticeView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,6 +33,7 @@ urlpatterns = [
     path('cars/', BrowseCarView.as_view(), name='cars'),
     path('cars/<str:brand_name>/', BrowseBrandModelsView.as_view(), name='car-brand'),
     path('cars/<str:car>/<str:version>/', CarDetailsView.as_view(), name='car-details'),
+    path('cars/<str:car>/<str:version>/notice/', AddNoticeView.as_view(), name='add-notice'),
     path('profile/user/<str:user>/', UserProfileView.as_view(), name='user-profile'),
     path('profile/history/<str:user>/', AddCarHistoryView.as_view(), name='car-history'),
     path('profile/history/<str:user>/<str:car>/<str:version>/remove', RemoveFromHistoryView.as_view(), name='remove-car')

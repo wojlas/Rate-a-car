@@ -35,6 +35,28 @@
     {% endif %}
 {% endblock %}
 
+{% block container4 %}
+    {% if notice_form %}
+Napisz opinię o {{ car }}: <br>
+    <form action="{% url 'add-notice' car.model car.version %}" method="post">
+    {% csrf_token %}
+    <table>
+        {{ notice_form.as_table }}
+    </table>
+    <input type="submit" value="Dodaj">
+    </form>
+    {% endif %}
+{% endblock %}
+
+{% block container5 %}
+    Opinie: <br>
+        {% for notice in notices %}
+        <a href="{% url 'user-profile' notice.author %}"> {{ notice.author }}</a>({{ notice.date.date }}) <br>
+            {{ notice.content}} <br>
+
+        {% endfor %}
+{% endblock %}
+
 {% block container6 %}
     Oceny: <br>
     {% for rate in rates %}

@@ -6,8 +6,9 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.views import View
 
-from .forms import LoginForm, NewBrandForm, NewModelForm, AddCarsHistoryForm, ForgotPassForm, RegisterUserForm, RateForm
-from .models import Brand, CarModel, Profile, CarOwners, Rate
+from .forms import LoginForm, NewBrandForm, NewModelForm, AddCarsHistoryForm, ForgotPassForm, RegisterUserForm, \
+    RateForm, NoticeForm
+from .models import Brand, CarModel, Profile, CarOwners, Rate, Notice
 
 
 class IndexView(View):
@@ -113,17 +114,11 @@ class NewBrandView(LoginRequiredMixin, View):
     login_url = '/login'
     redirect_field_name = '/create'
 
-    def get(self, request):
-        ctx = {
-            'add_brand': NewBrandForm(),
-        }
-        return render(request, 'rate_a_car_app/create-brand.html', ctx)
-
     def post(self, request):
         add_brand = NewBrandForm(request.POST)
         if add_brand.is_valid():
             Brand.objects.create(brand=add_brand.cleaned_data['brand'])
-            return redirect('/')
+            return redirect('/create-model/')
         else:
             ctx = {
                 'add_brand': NewBrandForm(),
@@ -138,7 +133,8 @@ class NewModelView(LoginRequiredMixin, View):
     redirect_field_name = 'new-model'
 
     def get(self, request):
-        ctx = {'add_model': NewModelForm()}
+        ctx = {'add_model': NewModelForm(),
+               'add_brand': NewBrandForm()}
         return render(request, 'rate_a_car_app/create-model.html', ctx)
 
     def post(self, request):
@@ -187,12 +183,16 @@ class CarDetailsView(View):
     def get(self, request, version, car):
         car = CarModel.objects.get(model=car, version=version)
         owners = CarOwners.objects.filter(car=car)
+        notices = Notice.objects.filter(car=car)
 
         if request.user in [own.owner.user for own in owners]:
             rate_form = RateForm(initial={'carmodel': car,
                                           'user': request.user})
+            notice_form = NoticeForm(initial={'author': request.user,
+                                              'car': car})
         else:
             rate_form = None
+            notice_form = None
         rates = Rate.objects.filter(carmodel=car).order_by('-date')[:10]
         if len([rate.design for rate in rates]) > 0:
             division_by = len([rate.design for rate in rates])
@@ -204,7 +204,9 @@ class CarDetailsView(View):
         summary_leading = sum([rate.leading for rate in rates]) / division_by
         ctx = {'car': car,
                'rate_form': rate_form,
+               'notice_form': notice_form,
                'rates': rates,
+               'notices': notices,
                'summary_design': summary_design,
                'summary_endurance': summary_endurance,
                'summary_cost': summary_cost,
@@ -231,6 +233,20 @@ class CarDetailsView(View):
                    'rate_form': rate_form}
 
             return render(request, 'rate_a_car_app/car-details.html', ctx)
+
+class AddNoticeView(View):
+    def post(self, request, car, version):
+        form = NoticeForm(request.POST)
+        car = CarModel.objects.get(model=car, version=version)
+        if form.is_valid():
+            Notice.objects.create(author=request.user,
+                                  car = car,
+                                  content=form.cleaned_data['content'])
+            return redirect(f"/cars/{car.model}/{car.version}/")
+        else:
+            return redirect(f"/cars/{car.model}/{car.version}/")
+
+
 
 
 class UserProfileView(View):

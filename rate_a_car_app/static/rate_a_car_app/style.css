@@ -96,6 +96,7 @@ ol > li:hover > a {
     margin-right: 30px;
     padding: 10px;
     border: #DDDDDD solid;
+    align-items: stretch;
 }
 
 .grid-content > .container2 {
@@ -105,3 +106,21 @@ ol > li:hover > a {
     border: #DDDDDD solid;
 }
 
+.all-cars{
+	    width: 80%;
+	    border-collapse: collapse;
+	    border-spacing: 0;
+	    margin-bottom: 1%;
+	}
+
+.table td,th {
+	    font-size: 14px;
+	    border-top: 1px solid #ddd;
+	    padding: 5px 12px;
+	    text-align: left;
+	    vertical-align: top;
+	}
+
+.table tbody tr:nth-child(even) td {
+	    background-color: #f3f3f3;
+	}

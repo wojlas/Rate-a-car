@@ -2,7 +2,7 @@ import django.forms as forms
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from .models import Brand, CarModel, CarOwners, Profile, Rate
+from .models import Brand, CarModel, CarOwners, Profile, Rate, Notice
 
 
 class NewBrandForm(ModelForm):
@@ -71,3 +71,10 @@ class RateForm(ModelForm):
         exclude = ['carmodel', 'user']
         carmodel = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=CarModel.objects.all())
         user = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=User.objects.all())
+
+class NoticeForm(ModelForm):
+    class Meta:
+        model = Notice
+        exclude = ['date', 'author', 'car']
+        author = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=User.objects.all())
+        car = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=CarModel.objects.all())
