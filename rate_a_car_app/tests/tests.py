@@ -6,13 +6,13 @@ from rate_a_car_app.models import Brand
 from rate_a_car_app.tests.utils import create_fake_user_with_second_pass, create_fake_user, fake_user, fake_brand
 
 
-@pytest.mark.skip
+
 @pytest.mark.django_db
 def test_register_view(client, set_up):
     count_user = User.objects.count()
     new_user = create_fake_user_with_second_pass()
-    response = client.post('/register/', {**new_user})
-    assert response.status_code == 200
+    response = client.post('/register/', new_user)
+    assert response.status_code == 302
     assert User.objects.count() == count_user + 1
 
 

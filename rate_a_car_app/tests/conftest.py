@@ -1,4 +1,5 @@
 import pytest
+from django.contrib.auth.models import Group
 
 from rate_a_car_app.models import User, Brand
 from rate_a_car_app.tests.utils import create_fake_user, fake_brand
@@ -12,6 +13,7 @@ def new_user():
 
 @pytest.fixture
 def set_up():
+    Group.objects.create(name='regular')
     for _ in range(10):
         create_fake_user()
 

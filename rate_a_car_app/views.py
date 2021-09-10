@@ -202,10 +202,10 @@ class CarDetailsView(View):
             division_by = len([rate.design for rate in rates])
         else:
             division_by = 1
-        summary_design = sum([rate.design for rate in rates]) / division_by
-        summary_endurance = sum([rate.endurance for rate in rates]) / division_by
-        summary_cost = sum([rate.operation_cost for rate in rates]) / division_by
-        summary_leading = sum([rate.leading for rate in rates]) / division_by
+        summary_design = round(sum([rate.design for rate in rates]) / division_by, 2)
+        summary_endurance = round(sum([rate.endurance for rate in rates]) / division_by, 2)
+        summary_cost = round(sum([rate.operation_cost for rate in rates]) / division_by, 2)
+        summary_leading = round(sum([rate.leading for rate in rates]) / division_by, 2)
         ctx = {'car': car,
                'rate_form': rate_form,
                'notice_form': notice_form,
