@@ -1,0 +1,42 @@
+{% extends 'rate_a_car_app/base.html' %}
+{% block container1 %}
+    Informacje:<br>
+    Nazwa użytkownika: {{ user.username }} <br>
+    Imię: {{ user.first_name }} <br>
+    Nazwisko: {{ user.last_name }} <br>
+    Email: {{ user.email }} <br>
+    Data dołączenia: {{ user.date_joined.date }} <br>
+    Liczba aut: {{ user.profile.car_history.count }}
+{% endblock %}
+
+{% block container2 %}
+    {{ error }}
+ <form method="post">
+ {% csrf_token %}
+ <table>
+     {{ form.as_table }}
+ </table>
+ <input type="submit" value="Zmień" name="data">
+ </form>
+{% endblock %}
+
+{% block container3 %}
+    {{ error_pass }}
+ <form method="post">
+ {% csrf_token %}
+ <table>
+     {{ new_pass.as_table }}
+ </table>
+ <input type="submit" value="Zmień" name="password">
+ </form>
+{% endblock %}
+
+{% block container6 %}
+   <form action="{% url 'delete-user' %}" method="post">
+       {% csrf_token %}
+       <button type="submit" onclick="return confirm('Usunąć konto?');">Usuń konto</button>
+   </form>
+
+
+
+{% endblock %}

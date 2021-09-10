@@ -24,11 +24,14 @@
                     <li><a href="{% url 'register' %}">Zarejestruj</a> </li>
                 </ul></li>
             {% else %}
-            <li>{{ user.username }}
+            <li>{{ request.user.username}}
                 <ul>
-                    <li><a href="{% url 'user-profile' user.username %}">Profil użytkownika</a></li>
-                    <li><a href="{% url 'car-history' user.username %}">Historia aut</a></li>
-                    <li><a href="#">Ustawienia</a></li>
+                    <li><a href="{% url 'user-profile' request.user.username %}">Profil użytkownika</a></li>
+                    <li><a href="{% url 'car-history' request.user.username %}">Historia aut</a></li>
+                    <li><a href="{% url 'settings' %}">Ustawienia</a></li>
+                    {% if request.user.is_superuser %}
+                        <li><a href="{% url 'admin:index' %}">Panel</a></li>
+                    {% endif %}
                     <li><a href="{% url 'logout' %}"> Wyloguj</a></li>
                 </ul>
             {% endif %}

@@ -78,3 +78,21 @@ class NoticeForm(ModelForm):
         exclude = ['date', 'author', 'car']
         author = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=User.objects.all())
         car = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=CarModel.objects.all())
+
+class SettingsDataForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+
+class SettingsChangePasswordForm(forms.Form):
+    old_password = forms.CharField(widget=forms.PasswordInput, label='Podaj obecne hasło')
+    password1 = forms.CharField(widget=forms.PasswordInput, label='Nowe hasło')
+    password2 = forms.CharField(widget=forms.PasswordInput, label='Powtórz hasło')
+
+    def clean(self):
+        cleaned_data = super(SettingsChangePasswordForm, self).clean()
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+
+        if password1 != password2:
+            raise forms.ValidationError('Hasła muszą być identyczne')

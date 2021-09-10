@@ -23,10 +23,10 @@
 
 {% block container3 %}
     Ostatnie opinie: <br>
-    {% for car in cars %}
-        {% if car.notice %}
-        <h4>{{ car.notice.date }} {{ car.car }}</h4> <br>
-        {{ car.notice.content }}
-        {% endif %}
+    {% for notice in notices %}
+
+        <h4>{{ notice.car }} {{ notice.date.date }}</h4> <br>
+        {{ notice.content }}
+
     {% endfor %}
 {% endblock %}

@@ -97,6 +97,7 @@ ol > li:hover > a {
     padding: 10px;
     border: #DDDDDD solid;
     align-items: stretch;
+    width: 33%;
 }
 
 .grid-content > .container2 {
