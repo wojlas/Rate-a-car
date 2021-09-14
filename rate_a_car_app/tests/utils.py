@@ -23,5 +23,14 @@ def create_fake_user_with_second_pass():
 def fake_brand():
     return {'brand': faker.name()}
 
-def fake_model():
-    return {}
+def create_fake_same_pass():
+    password = faker.name()
+    return {'password1': password,
+            'password2': password}
+
+def create_car_model():
+    return {'brand': faker.pyint(max_value=5),
+            'model': faker.name(),
+            'version': faker.name(),
+            'production_from': faker.pyint(max_value=2021),
+            'production_to': faker.pyint(max_value=2021)}
