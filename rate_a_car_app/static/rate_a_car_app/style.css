@@ -128,7 +128,7 @@ ol > li:hover > a {
 
 .all-cars td,th {
 	    font-size: 14px;
-	    border-top: 1px solid #ddd;
+	    border-top: 1px solid #9370DB;
 	    padding: 5px 12px;
 	    text-align: left;
 	    vertical-align: top;
@@ -137,6 +137,10 @@ ol > li:hover > a {
 .all-cars tbody tr:nth-child(even) td {
 	    background-color: #f3f3f3;
 	}
+
+.all-cars > tr > td:hover {
+    background-color: #0099CC;
+}
 body {
     margin-bottom: 20px;
 }

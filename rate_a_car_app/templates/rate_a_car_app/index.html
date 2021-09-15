@@ -1,66 +1,77 @@
 {% extends 'rate_a_car_app/base.html' %}
 {% block title %}
-Rate a Car
+    Rate a Car
 {% endblock %}
+{% block container1 %}
+    <table class="all-cars">
+        <tr>
+            <td colspan="2" align="center"><h4>Najwyżej oceniane:</h4></td>
+        </tr>
+
+        <tr>
+            <td>Model</td>
+            <td>Ocena</td>
+        </tr>
+        {% for car in best_cars %}
+            <tr>
+                {% if car.average_rate %}
+                    <td><a href="{% url 'car-details' car.model car.version %}"> {{ car }} </a></td>
+                    <td>{{ car.average_rate }}</td><br>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
 {% block container2 %}
-        {% for car in cars %}
-        <ul>
-            <li>{{ car.brand }} {{ car.name }} {{ car.version }}</li>
-        </ul>
-    {% endfor %}
-
-    <div class="pagination">
-    <span class="step-links">
-        {% if cars.has_previous %}
-            <a href="?page=1">&laquo; pierwsza | </a>
-            <a href="?page={{ cars.previous_page_number }}">poprzednia | </a>
-        {% endif %}
-
-         <span class="current">
-                    Strona {{ cars.number }} z {{ cars.paginator.num_pages }}.
-                </span>
-
-        {% if cars.has_next %}
-            <a href="?page={{ cars.next_page_number }}"> następna  </a>|
-            <a href="?page={{ cars.paginator.num_pages }}">ostatnia &raquo;</a>
-        {% endif %}
-    </span>
-</div>
-
-
-{% endblock %}
-
-{% block container3 %}
 
     <h4>Najnowsze opinie:</h4>
     {% for notice in new_notices %}
-        <ul>
-        <h5><a href="{% url 'user-profile' notice.author.username %}">{{ notice.author.username }}</a>
-            <a href="{% url 'car-details' notice.car.model notice.car.version %}"> {{ notice.car }} </a></h5>
+        <ul><h5>
+            <img src="{{ notice.author.profile.avatar.url }}" height="30px" width="30px">
+            <a href="{% url 'user-profile' notice.author.username %}">{{ notice.author.username }}</a>
+                <a href="{% url 'car-details' notice.car.model notice.car.version %}"> {{ notice.car }} </a></h5>
             {{ notice.content }} <br><br>
         </ul>
     {% endfor %}
 {% endblock %}
 
-{% block container4 %}
-    <h4>Najwyżej oceniane:</h4>
-    {% for car in best_cars %}
-        {{ car }} {{ car.average_rate.is_integer }} <br>
-    {% endfor %}
 
+
+{% block container3 %}
+    <ul>
+        <h4>Najnowsze oceny:</h4>
+        {% for rate in new_rates %}
+            <h5>
+                <img src="{{ rate.user.profile.avatar.url }}" height="30px" width="30px">
+                <a href="{% url 'user-profile' rate.user %}"> {{ rate.user.username }}</a>
+                <a href="{% url 'car-details' rate.carmodel.model rate.carmodel.version %}"> {{ rate.carmodel }} </a>
+            </h5>
+            Wytrzymałość: {{ rate.endurance }}
+            Koszty eksploatacji: {{ rate.operation_cost }} <br>
+            Prowadzenie: {{ rate.leading }}
+            Wygląd: {{ rate.design }} <br>
+        {% endfor %}
+
+    </ul>
 {% endblock %}
 
-{% block container6 %}
-    <ul>
-    <h4>Najnowsze oceny:</h4>
-    {% for rate in new_rates %}
-        <h5>
-            <a href="{% url 'user-profile' rate.user %}"> {{ rate.user.username }}</a>
-            <a href="{% url 'car-details' rate.carmodel.model rate.carmodel.version %}"> {{ rate.carmodel }} </a></h5>
-        Wytrzymałość: {{ rate.endurance }} <br>
-        Koszty eksploatacji: {{ rate.operation_cost }} <br>
-        Prowadzenie: {{ rate.leading }} <br>
-        Wygląd: {{ rate.design }} <br>
-    {% endfor %}
-    </ul>
+{% block container4 %}
+    <table class="all-cars">
+        <tr>
+            <td colspan="3" align="center"><h4>Ostatnio dodane:</h4></td>
+        </tr>
+        <tr>
+            <td>Marka</td>
+            <td>Model</td>
+            <td>Wersja</td>
+        </tr>
+        {% for car in new_cars %}
+        <tr>
+            <td><a href="{% url 'car-details' car.model car.version %}">{{ car.brand }}</a></td>
+            <td><a href="{% url 'car-details' car.model car.version %}">{{ car.model }}</a></td>
+            <td><a href="{% url 'car-details' car.model car.version %}">{{ car.version }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
 {% endblock %}

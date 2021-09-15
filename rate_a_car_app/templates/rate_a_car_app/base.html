@@ -12,12 +12,7 @@
     <div class="main-bar">
         <ol>
             <li><a href="/">Strona główna</a></li>
-            <li><a href="#">Auta</a>
-                <ul>
-                    <li><a href="{% url 'cars' %}">Przeglądaj</a></li>
-                    <li><a href="{% url 'create-model' %}">Dodaj model</a></li>
-                </ul>
-            </li>
+            <li><a href="{% url 'cars' %}">Przeglądaj auta</a></li>
             {% if not user.is_authenticated %}
             <li><a href="{% url 'login' %}">Zaloguj</a>
                 <ul>

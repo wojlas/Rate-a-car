@@ -17,14 +17,11 @@ class IndexView(View):
     """
 
     def get(self, request):
-        new_cars = CarModel.objects.order_by('-date')
-        new_notices = Notice.objects.order_by('-date')[:10]
-        new_rates = Rate.objects.order_by('-date')[:10]
-        paginator = Paginator(new_cars, 10)
-        page = request.GET.get('page')
-        new_cars_pagination = paginator.get_page(page)
+        new_cars = CarModel.objects.order_by('-date')[:10]
+        new_notices = Notice.objects.order_by('-date')[:4]
+        new_rates = Rate.objects.order_by('-date')[:4]
         best_cars = CarModel.objects.order_by('-average_rate')
-        cnt = {'cars': new_cars_pagination,
+        cnt = {'new_cars': new_cars,
                'new_notices': new_notices,
                'new_rates': new_rates,
                'best_cars': best_cars}
@@ -209,6 +206,9 @@ class CarDetailsView(View):
         summary_endurance = round(sum([rate.endurance for rate in rates]) / division_by, 2)
         summary_cost = round(sum([rate.operation_cost for rate in rates]) / division_by, 2)
         summary_leading = round(sum([rate.leading for rate in rates]) / division_by, 2)
+        average = (summary_leading + summary_cost + summary_design + summary_endurance) / 4
+        car.average_rate = round(average, 2)
+        car.save()
         ctx = {'car': car,
                'rate_form': rate_form,
                'notice_form': notice_form,
@@ -218,7 +218,7 @@ class CarDetailsView(View):
                'summary_endurance': summary_endurance,
                'summary_cost': summary_cost,
                'summary_leading': summary_leading,
-               'avarage': round((summary_leading + summary_cost + summary_design + summary_endurance) / 4, 2)}
+               'avarage': average}
 
         return render(request, 'rate_a_car_app/car-details.html', ctx)
 
