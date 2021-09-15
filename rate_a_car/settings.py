@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rate_a_car_app.apps.RateACarAppConfig',
-    'pytest_django'
+    'pytest_django',
+    'avatars'
 ]
 
 MIDDLEWARE = [

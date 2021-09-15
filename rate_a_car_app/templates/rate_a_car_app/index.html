@@ -42,6 +42,14 @@ Rate a Car
     {% endfor %}
 {% endblock %}
 
+{% block container4 %}
+    <h4>Najwyżej oceniane:</h4>
+    {% for car in best_cars %}
+        {{ car }} {{ car.average_rate.is_integer }} <br>
+    {% endfor %}
+
+{% endblock %}
+
 {% block container6 %}
     <ul>
     <h4>Najnowsze oceny:</h4>

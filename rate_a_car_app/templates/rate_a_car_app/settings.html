@@ -22,12 +22,12 @@
  </table>
  <input type="submit" value="Zmień" name="data">
  </form> <br>
-    <form action="#" method="post">
+    <form method="post">
     {% csrf_token %}
     <table>
         {{ new_avatar }}
     </table>
-    <input type="submit" value="Zmień avatar">
+    <input type="submit" value="Zmień avatar" name="avatar">
     </form>
 {% endblock %}
 

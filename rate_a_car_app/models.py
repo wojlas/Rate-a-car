@@ -1,4 +1,3 @@
-
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -19,7 +18,7 @@ RATE_CHOICE = [
 class Profile(models.Model):
     """Model extend User by one-to-one field"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to='static/avatars', default='default.png')
+    avatar = models.ImageField(upload_to='avatars', default='default.png')
     car_history = models.ManyToManyField('CarModel', through='CarOwners')
 
     def set_avatar(self):
@@ -27,7 +26,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}"
-
 
 
 class Brand(models.Model):
@@ -48,6 +46,7 @@ class CarModel(models.Model):
     model = models.CharField(max_length=32, verbose_name='Model')
     version = models.CharField(max_length=32, verbose_name='Wersja', null=True)
     production_from = models.IntegerField(null=False, verbose_name='Produkcja od')
+    average_rate = models.FloatField(null=True)
     production_to = models.CharField(null=True, verbose_name='Produkcja do', default=' - ', max_length=4)
     opinions = models.ForeignKey('Notice', on_delete=models.CASCADE, null=True)
     owners = models.ManyToManyField(Profile, through='CarOwners')
@@ -68,14 +67,13 @@ class Rate(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
 
-
-
 class Notice(models.Model):
     """Model with cars notices"""
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(verbose_name='')
     date = models.DateTimeField(auto_now_add=True)
     car = models.ForeignKey(CarModel, on_delete=models.CASCADE, null=True)
+
 
 class CarOwners(models.Model):
     """Many to many table between models CarModel and Profile"""

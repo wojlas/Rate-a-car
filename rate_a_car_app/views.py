@@ -11,6 +11,7 @@ from .forms import LoginForm, NewBrandForm, NewModelForm, AddCarsHistoryForm, Fo
 from .models import Brand, CarModel, Profile, CarOwners, Rate, Notice
 
 
+
 class IndexView(View):
     """Display aplications main page
     """
@@ -22,9 +23,11 @@ class IndexView(View):
         paginator = Paginator(new_cars, 10)
         page = request.GET.get('page')
         new_cars_pagination = paginator.get_page(page)
+        best_cars = CarModel.objects.order_by('-average_rate')
         cnt = {'cars': new_cars_pagination,
                'new_notices': new_notices,
-               'new_rates': new_rates}
+               'new_rates': new_rates,
+               'best_cars': best_cars}
         return render(request, 'rate_a_car_app/index.html', cnt)
 
 
@@ -340,8 +343,10 @@ class SettingsView(View):
                                                  'last_name': request.user.last_name,
                                                  'email': request.user.email})
                 new_password_form = SettingsChangePasswordForm()
+                new_avatar_form = UpdateAvatarForm
                 ctx = {'form': form,
                        'new_pass': new_password_form,
+                       'new_avatar': new_avatar_form,
                        'error': 'Coś poszło nie tak'}
                 return render(request, 'rate_a_car_app/settings.html', ctx)
 
@@ -361,6 +366,39 @@ class SettingsView(View):
                 else:
                     request.user.set_password = form.cleaned_data['password1']
                     return redirect('/settings/')
+            else:
+                form = SettingsDataForm(initial={'username': request.user.username,
+                                                 'first_name': request.user.first_name,
+                                                 'last_name': request.user.last_name,
+                                                 'email': request.user.email})
+                new_password_form = SettingsChangePasswordForm()
+                new_avatar_form = UpdateAvatarForm
+                ctx = {'form': form,
+                       'new_pass': new_password_form,
+                       'new_avatar': new_avatar_form,
+                       'error': 'Coś poszło nie tak'}
+                return render(request, 'rate_a_car_app/settings.html', ctx)
+
+        if 'avatar' in request.POST:
+            form = UpdateAvatarForm(request.POST)
+            if form.is_valid():
+                profile= Profile.objects.get(user=request.user)
+                profile.avatar = form.cleaned_data['avatar']
+                profile.save()
+                return redirect('/settings/')
+            else:
+                form = SettingsDataForm(initial={'username': request.user.username,
+                                                 'first_name': request.user.first_name,
+                                                 'last_name': request.user.last_name,
+                                                 'email': request.user.email})
+                new_password_form = SettingsChangePasswordForm()
+                new_avatar_form = UpdateAvatarForm
+                ctx = {'form': form,
+                       'new_pass': new_password_form,
+                       'new_avatar': new_avatar_form,
+                       'error': 'Coś poszło nie tak'}
+                return render(request, 'rate_a_car_app/settings.html', ctx)
+
 
 
 
