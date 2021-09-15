@@ -89,18 +89,20 @@ ol > li:hover > a {
 .grid-content {
     display: flex;
     justify-content: center;
-    overflow-y: scroll;
+    overflow: hidden;
+    overflow-y: auto;
 }
 
 .grid-content > .container1 {
     float: left;
     margin-right: 10px;
-    padding: 10px;
+    padding: 0;
     border: #DDDDDD solid;
     align-items: stretch;
     width: 33%;
     height: 500px;
     align-content: center;
+    overflow: inherit;
 }
 
 .grid-content > .container2 {
@@ -112,7 +114,10 @@ ol > li:hover > a {
     width: 33%;
     height: 500px;
     align-content: center;
+    overflow: auto;
+    overflow: inherit;
 }
+
 
 .all-cars{
 	    width: 80%;

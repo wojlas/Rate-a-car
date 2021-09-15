@@ -2,7 +2,7 @@ import pytest
 from django.contrib.auth.models import Group
 
 from rate_a_car_app.models import User, Brand
-from rate_a_car_app.tests.utils import create_fake_user, create_fake_user_with_second_pass, fake_brand
+from rate_a_car_app.tests.utils import create_fake_user, create_fake_user_with_second_pass, fake_brand, create_car_brand
 
 
 @pytest.fixture
@@ -16,5 +16,6 @@ def set_up():
         create_fake_user()
 
 @pytest.fixture
-def new_brand():
-    return Brand.objects.create(fake_brand)
+def new_car():
+    for _ in range(10):
+        create_car_brand()

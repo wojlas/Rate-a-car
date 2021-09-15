@@ -1,9 +1,11 @@
 {% extends 'rate_a_car_app/base.html' %}
+{% load static %}
 {% block title %}
-{{ user.user.username }} | Rate a Car
+{{ user.username }} | Rate a Car
 {% endblock %}
 
 {% block container1 %}
+    <img src="{{ user.profile.avatar.url }}" alt="avatar" width="200px" height="200px"><br>
     Informacje:<br>
     Nazwa użytkownika: {{ user.username }} <br>
     Imię: {{ user.first_name }} <br>

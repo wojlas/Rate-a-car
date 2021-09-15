@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from .forms import LoginForm, NewBrandForm, NewModelForm, AddCarsHistoryForm, ForgotPassForm, RegisterUserForm, \
-    RateForm, NoticeForm, SettingsDataForm, SettingsChangePasswordForm
+    RateForm, NoticeForm, SettingsDataForm, SettingsChangePasswordForm, UpdateAvatarForm
 from .models import Brand, CarModel, Profile, CarOwners, Rate, Notice
 
 
@@ -317,8 +317,10 @@ class SettingsView(View):
                                          'last_name': request.user.last_name,
                                          'email': request.user.email})
         new_password_form = SettingsChangePasswordForm()
+        new_avatar_form = UpdateAvatarForm
         ctx = {'form': form,
-               'new_pass': new_password_form}
+               'new_pass': new_password_form,
+               'new_avatar': new_avatar_form}
         return render(request, 'rate_a_car_app/settings.html', ctx)
 
     def post(self, request):

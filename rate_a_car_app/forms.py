@@ -96,3 +96,8 @@ class SettingsChangePasswordForm(forms.Form):
 
         if password1 != password2:
             raise forms.ValidationError('Hasła muszą być identyczne')
+
+class UpdateAvatarForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['avatar']

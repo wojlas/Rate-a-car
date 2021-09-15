@@ -31,16 +31,19 @@ Rate a Car
 {% endblock %}
 
 {% block container3 %}
+
     <h4>Najnowsze opinie:</h4>
     {% for notice in new_notices %}
+        <ul>
         <h5><a href="{% url 'user-profile' notice.author.username %}">{{ notice.author.username }}</a>
             <a href="{% url 'car-details' notice.car.model notice.car.version %}"> {{ notice.car }} </a></h5>
-        {{ notice.content }} <br><br>
-
+            {{ notice.content }} <br><br>
+        </ul>
     {% endfor %}
 {% endblock %}
 
 {% block container6 %}
+    <ul>
     <h4>Najnowsze oceny:</h4>
     {% for rate in new_rates %}
         <h5>
@@ -51,4 +54,5 @@ Rate a Car
         Prowadzenie: {{ rate.leading }} <br>
         Wygląd: {{ rate.design }} <br>
     {% endfor %}
+    </ul>
 {% endblock %}

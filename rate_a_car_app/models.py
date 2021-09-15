@@ -19,7 +19,14 @@ RATE_CHOICE = [
 class Profile(models.Model):
     """Model extend User by one-to-one field"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='static/avatars', default='default.png')
     car_history = models.ManyToManyField('CarModel', through='CarOwners')
+
+    def set_avatar(self):
+        self.has_picture = True
+
+    def __str__(self):
+        return f"{self.user.username}"
 
 
 

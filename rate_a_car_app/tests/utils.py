@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from faker import Faker
 
+from rate_a_car_app.models import CarModel, Brand
+
 faker = Faker("pl_PL")
 
 def fake_user():
@@ -28,9 +30,13 @@ def create_fake_same_pass():
     return {'password1': password,
             'password2': password}
 
-def create_car_model():
-    return {'brand': faker.pyint(max_value=5),
+def fake_car_data():
+    brand = Brand.objects.first()
+    return {'brand': brand.id,
             'model': faker.name(),
             'version': faker.name(),
             'production_from': faker.pyint(max_value=2021),
             'production_to': faker.pyint(max_value=2021)}
+
+def create_car_brand():
+    Brand.objects.create(**fake_brand())

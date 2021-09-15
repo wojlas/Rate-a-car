@@ -1,5 +1,9 @@
 {% extends 'rate_a_car_app/base.html' %}
+{% block title %}
+ {{ user.username }} ustawienia | Rate a Car
+{% endblock %}
 {% block container1 %}
+    <img src="{{ user.profile.avatar.url }}" height="200px" width="200px" alt="avatar"><br>
     Informacje:<br>
     Nazwa użytkownika: {{ user.username }} <br>
     Imię: {{ user.first_name }} <br>
@@ -17,7 +21,14 @@
      {{ form.as_table }}
  </table>
  <input type="submit" value="Zmień" name="data">
- </form>
+ </form> <br>
+    <form action="#" method="post">
+    {% csrf_token %}
+    <table>
+        {{ new_avatar }}
+    </table>
+    <input type="submit" value="Zmień avatar">
+    </form>
 {% endblock %}
 
 {% block container3 %}

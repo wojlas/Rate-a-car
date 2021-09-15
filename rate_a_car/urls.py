@@ -40,3 +40,6 @@ urlpatterns = [
     path('profile/history/<str:user>/', AddCarHistoryView.as_view(), name='car-history'),
     path('profile/history/<str:user>/<str:car>/<str:version>/remove', RemoveFromHistoryView.as_view(), name='remove-car')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
