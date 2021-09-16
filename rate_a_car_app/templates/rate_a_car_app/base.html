@@ -19,7 +19,7 @@
                     <li><a href="{% url 'register' %}">Zarejestruj</a> </li>
                 </ul></li>
             {% else %}
-            <li>{{ request.user.username}}
+            <li>{{ request.user.username }}
                 <ul>
                     <li><a href="{% url 'user-profile' request.user.username %}">Profil użytkownika</a></li>
                     <li><a href="{% url 'car-history' request.user.username %}">Historia aut</a></li>
@@ -36,12 +36,6 @@
                     <li><a href="#">Kontakt</a></li>
                     <li><a href="#">Regulamin</a></li>
                     <li><a href="#">FAQ</a></li>
-                </ul>
-            </li>
-            <li>Wyszukaj
-                <ul>
-                    <li><form method="post"><input type="text"><input type="submit" value="Wyszukaj"></form></li>
-                    <li><a href="#">Zaawansowane wyszukiwanie</a> </li>
                 </ul>
             </li>
         </ol>

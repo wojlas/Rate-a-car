@@ -13,9 +13,22 @@
 {% endblock %}
 {% block container2 %}
     Modele {{ brand_name.brand }}:<br>
-    {% for car in cars %}
-
-        <a href="{% url 'car-details' car.model car.version %}">{{ car.model }} {{ car.version }} </a> <br>
-
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Wyszukaj auto">
+    <table id="myTable">
+            <tr id="header">
+                <td align="center"> Model </td>
+                <td align="center"> Produkowany od </td>
+                <td align="center"> Produkowany do </td>
+                <td align="center"> Ocena </td>
+            </tr>
+        {% for car in cars %}
+            <tr id="myTR">
+                <td align="center"><a href="{% url 'car-details' car.model car.version %}">{{ car.model }}({{ car.version }})</a></td>
+{#                <td align="center"><a href="{% url 'car-details' car.model car.version %}">{{ car.model }}({{ car.version }})</a></td>#}
+                <td align="center"><a href="{% url 'car-details' car.model car.version %}"> {{ car.production_from }} </a></td>
+                <td align="center"><a href="{% url 'car-details' car.model car.version %}"> {{ car.production_to }} </a></td>
+                <td align="center"><a href="{% url 'car-details' car.model car.version %}"> {{ car.average_rate }} </a></td>
+            </tr>
     {% endfor %}
+    </table>
 {% endblock %}

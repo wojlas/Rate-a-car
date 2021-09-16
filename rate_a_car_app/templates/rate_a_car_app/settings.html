@@ -40,14 +40,21 @@
  </table>
  <input type="submit" value="Zmień" name="password">
  </form>
-{% endblock %}
-
-{% block container6 %}
-   <form action="{% url 'delete-user' %}" method="post">
+    <form action="{% url 'delete-user' %}" method="post">
        {% csrf_token %}
        <button type="submit" onclick="return confirm('Usunąć konto?');">Usuń konto</button>
-   </form>
+{% endblock %}
 
 
 
+
+{% block container4 %}
+ <div class="empty"></div>
+{% endblock %}
+
+{% block container5 %}
+ <div class="empty"></div>
+{% endblock %}
+{% block container6 %}
+ <div class="empty"></div>
 {% endblock %}

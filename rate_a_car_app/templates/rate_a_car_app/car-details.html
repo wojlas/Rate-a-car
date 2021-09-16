@@ -63,7 +63,7 @@ Napisz opinię o {{ car }}: <br>
 
 {% block container4 %}
     {% if images %}
-       {% for img in images %}
+        {% for img in images %}
         <img src="{{ img.image.url }}" alt="zdj {{ forloop.counter }}" height="75%" width="100%">
         {% endfor %}
     {% endif %}

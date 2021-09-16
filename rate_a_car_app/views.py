@@ -202,6 +202,7 @@ class CarDetailsView(View):
         else:
             rate_form = None
             notice_form = None
+
         rates = Rate.objects.filter(carmodel=car).order_by('-date')[:10]
         if len([rate.design for rate in rates]) > 0:
             division_by = len([rate.design for rate in rates])
@@ -373,7 +374,7 @@ class AddCarHistoryView(View):
     def get(self, request, user):
         user = User.objects.get(username=user)
         form = AddCarsHistoryForm(initial={'owner': user.id})
-        ctx = {'user_car_history': CarOwners.objects.filter(owner=Profile.objects.get(user=user)),
+        ctx = {'user_car_history': CarOwners.objects.filter(owner=Profile.objects.get(user=user)).order_by('use_from'),
                'add_car': form}
         return render(request, 'rate_a_car_app/car-history.html', ctx)
 

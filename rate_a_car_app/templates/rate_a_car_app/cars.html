@@ -10,21 +10,40 @@
 
     {% endfor %}
 {% endblock %}
-
 {% block container2 %}
-    <table class="all-cars">
-        <tr><td align="center" colspan="3"><h3>Auta</h3></td></tr>
-            <tr>
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Wyszukaj auto">
+    <table id="myTable">
+        <tr><td align="center" colspan="5"><h3>Auta</h3></td></tr>
+            <tr id="header">
                 <td align="center"> Marka </td>
-                <td align="center"> Model </td>
-                <td align="center"> Lata produkcji </td>
+                <td align="center"> Produkowany od </td>
+                <td align="center"> Produkowany do </td>
+                <td align="center"> Ocena </td>
             </tr>
         {% for car in new_car %}
-            <tr>
-                <td align="center"> {{ car.brand }} </td>
-                <td align="center"><a href="{% url 'car-details' car.model car.version %}">{{ car.model }}({{ car.version }})</a></td>
-                <td align="center"> {{ car.production_from }} - {{ car.production_to }} </td>
+            <tr id="myTR">
+                <td align="center"><a href="{% url 'car-details' car.model car.version %}"> {{ car.brand }} {{ car.model }}({{ car.version }})</a></td>
+{#                <td align="center"><a href="{% url 'car-details' car.model car.version %}">{{ car.model }}({{ car.version }})</a></td>#}
+                <td align="center"><a href="{% url 'car-details' car.model car.version %}"> {{ car.production_from }} </a></td>
+                <td align="center"><a href="{% url 'car-details' car.model car.version %}"> {{ car.production_to }} </a></td>
+                <td align="center"><a href="{% url 'car-details' car.model car.version %}"> {{ car.average_rate }} </a></td>
             </tr>
         {% endfor %}
     </table>
+{% endblock %}
+
+
+{% block container3 %}
+ <div class="empty"></div>
+{% endblock %}
+
+{% block container4 %}
+ <div class="empty"></div>
+{% endblock %}
+
+{% block container5 %}
+ <div class="empty"></div>
+{% endblock %}
+{% block container6 %}
+ <div class="empty"></div>
 {% endblock %}
