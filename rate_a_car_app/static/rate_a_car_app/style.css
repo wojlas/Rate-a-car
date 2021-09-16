@@ -91,12 +91,13 @@ ol > li:hover > a {
     justify-content: center;
     overflow: hidden;
     overflow-y: auto;
+    align-content: center;
 }
 
 .grid-content > .container1 {
     float: left;
     margin-right: 10px;
-    padding: 0;
+    padding: 20px;
     border: #DDDDDD solid;
     align-items: stretch;
     width: 33%;
@@ -109,7 +110,7 @@ ol > li:hover > a {
     float: left;
     margin-top: 10px;
     margin-right: 10px;
-    padding: 10px;
+    padding: 0;
     border: #DDDDDD solid;
     width: 33%;
     height: 500px;
@@ -156,3 +157,4 @@ body {
     text-align: right;
     padding-right: 50px;
 }
+

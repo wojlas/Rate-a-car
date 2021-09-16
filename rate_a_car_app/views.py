@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
@@ -7,9 +9,8 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from .forms import LoginForm, NewBrandForm, NewModelForm, AddCarsHistoryForm, ForgotPassForm, RegisterUserForm, \
-    RateForm, NoticeForm, SettingsDataForm, SettingsChangePasswordForm, UpdateAvatarForm
-from .models import Brand, CarModel, Profile, CarOwners, Rate, Notice
-
+    RateForm, NoticeForm, SettingsDataForm, SettingsChangePasswordForm, UpdateAvatarForm, UploadCarPictureForm
+from .models import Brand, CarModel, Profile, CarOwners, Rate, Notice, Images
 
 
 class IndexView(View):
@@ -18,13 +19,15 @@ class IndexView(View):
 
     def get(self, request):
         new_cars = CarModel.objects.order_by('-date')[:10]
-        new_notices = Notice.objects.order_by('-date')[:4]
-        new_rates = Rate.objects.order_by('-date')[:4]
+        new_notices = Notice.objects.order_by('-date')[:10]
+        new_rates = Rate.objects.order_by('-date')[:10]
         best_cars = CarModel.objects.order_by('-average_rate')
+        images_query = list(Images.objects.all())
         cnt = {'new_cars': new_cars,
                'new_notices': new_notices,
                'new_rates': new_rates,
-               'best_cars': best_cars}
+               'best_cars': best_cars,
+               'random_images':random.sample(images_query, 3)}
         return render(request, 'rate_a_car_app/index.html', cnt)
 
 
@@ -126,8 +129,9 @@ class NewBrandView(View):
         else:
             ctx = {
                 'add_brand': NewBrandForm(),
+                'error': 'Marka o tej nazwie już istnieje'
             }
-            return render(request, 'rate_a_car_app/create-brand.html', ctx)
+            return redirect('/create-model/')
 
 
 class NewModelView(LoginRequiredMixin, View):
@@ -149,10 +153,10 @@ class NewModelView(LoginRequiredMixin, View):
                                     version=add_model.cleaned_data['version'],
                                     production_from=add_model.cleaned_data['production_from'],
                                     production_to=add_model.cleaned_data['production_to'])
-            return redirect('/')
+            return redirect(f'/profile/history/{request.user.username}/')
         else:
             ctx = {'add_model': NewModelForm()}
-            return render(request, 'rate_a_car_app/create-brand.html', ctx)
+            return render(request, 'rate_a_car_app/create-model.html', ctx)
 
 
 class BrowseCarView(View):
@@ -188,6 +192,7 @@ class CarDetailsView(View):
         car = CarModel.objects.get(model=car, version=version)
         owners = CarOwners.objects.filter(car=car)
         notices = Notice.objects.filter(car=car)
+        add_pic_form = UploadCarPictureForm(initial={'carmodel': car})
 
         if request.user in [own.owner.user for own in owners]:
             rate_form = RateForm(initial={'carmodel': car,
@@ -218,28 +223,119 @@ class CarDetailsView(View):
                'summary_endurance': summary_endurance,
                'summary_cost': summary_cost,
                'summary_leading': summary_leading,
-               'avarage': average}
+               'avarage': round(average,2),
+               'num_of_opinions': notices.count(),
+               'num_of_rates': rates.count(),
+               'add_pic': add_pic_form,
+               'images': Images.objects.filter(carmodel=car.id)}
 
         return render(request, 'rate_a_car_app/car-details.html', ctx)
 
     def post(self, request, car, version):
-        form = RateForm(request.POST)
         car = CarModel.objects.get(model=car, version=version)
-        if form.is_valid():
-            Rate.objects.create(design=form.cleaned_data['design'],
-                                leading=form.cleaned_data['leading'],
-                                operation_cost=form.cleaned_data['operation_cost'],
-                                endurance=form.cleaned_data['endurance'],
-                                carmodel=car,
-                                user=request.user)
-            return redirect(f"/cars/{car.model}/{version}/")
-        else:
-            rate_form = RateForm()
-            car = CarModel.objects.get(model=car, version=version)
-            ctx = {'car': car,
-                   'rate_form': rate_form}
+        if 'rates' in request.POST:
+            form = RateForm(request.POST)
+            if form.is_valid():
+                Rate.objects.create(design=form.cleaned_data['design'],
+                                    leading=form.cleaned_data['leading'],
+                                    operation_cost=form.cleaned_data['operation_cost'],
+                                    endurance=form.cleaned_data['endurance'],
+                                    carmodel=car,
+                                    user=request.user)
+                return redirect(f"/cars/{car.model}/{version}/")
+            else:
+                car = CarModel.objects.get(model=car, version=version)
+                owners = CarOwners.objects.filter(car=car)
+                notices = Notice.objects.filter(car=car)
+                add_pic_form = UploadCarPictureForm
 
-            return render(request, 'rate_a_car_app/car-details.html', ctx)
+                if request.user in [own.owner.user for own in owners]:
+                    rate_form = RateForm(initial={'carmodel': car,
+                                                  'user': request.user})
+                    notice_form = NoticeForm(initial={'author': request.user,
+                                                      'car': car})
+                else:
+                    rate_form = None
+                    notice_form = None
+                rates = Rate.objects.filter(carmodel=car).order_by('-date')[:10]
+                if len([rate.design for rate in rates]) > 0:
+                    division_by = len([rate.design for rate in rates])
+                else:
+                    division_by = 1
+                summary_design = round(sum([rate.design for rate in rates]) / division_by, 2)
+                summary_endurance = round(sum([rate.endurance for rate in rates]) / division_by, 2)
+                summary_cost = round(sum([rate.operation_cost for rate in rates]) / division_by, 2)
+                summary_leading = round(sum([rate.leading for rate in rates]) / division_by, 2)
+                average = (summary_leading + summary_cost + summary_design + summary_endurance) / 4
+                car.average_rate = round(average, 2)
+                car.save()
+                ctx = {'car': car,
+                       'rate_form': rate_form,
+                       'notice_form': notice_form,
+                       'rates': rates,
+                       'notices': notices,
+                       'summary_design': summary_design,
+                       'summary_endurance': summary_endurance,
+                       'summary_cost': summary_cost,
+                       'summary_leading': summary_leading,
+                       'avarage': average,
+                       'num_of_opinions': notices.count(),
+                       'num_of_rates': rates.count(),
+                       'add_pic': add_pic_form}
+
+                return render(request, 'rate_a_car_app/car-details.html', ctx)
+        if 'image' in request.POST:
+            img_form = UploadCarPictureForm(request.POST, request.FILES)
+
+            if img_form.is_valid():
+                Images.objects.create(carmodel=car,
+                                      image=img_form.cleaned_data['image'])
+
+                return redirect(f"/cars/{car.model}/{version}/")
+            else:
+                car = CarModel.objects.get(model=car, version=version)
+                owners = CarOwners.objects.filter(car=car)
+                notices = Notice.objects.filter(car=car)
+                add_pic_form = UploadCarPictureForm
+
+                if request.user in [own.owner.user for own in owners]:
+                    rate_form = RateForm(initial={'carmodel': car,
+                                                  'user': request.user})
+                    notice_form = NoticeForm(initial={'author': request.user,
+                                                      'car': car})
+                else:
+                    rate_form = None
+                    notice_form = None
+                rates = Rate.objects.filter(carmodel=car).order_by('-date')[:10]
+                if len([rate.design for rate in rates]) > 0:
+                    division_by = len([rate.design for rate in rates])
+                else:
+                    division_by = 1
+                summary_design = round(sum([rate.design for rate in rates]) / division_by, 2)
+                summary_endurance = round(sum([rate.endurance for rate in rates]) / division_by, 2)
+                summary_cost = round(sum([rate.operation_cost for rate in rates]) / division_by, 2)
+                summary_leading = round(sum([rate.leading for rate in rates]) / division_by, 2)
+                average = (summary_leading + summary_cost + summary_design + summary_endurance) / 4
+                car.average_rate = round(average, 2)
+                car.save()
+                ctx = {'car': car,
+                       'rate_form': rate_form,
+                       'notice_form': notice_form,
+                       'rates': rates,
+                       'notices': notices,
+                       'summary_design': summary_design,
+                       'summary_endurance': summary_endurance,
+                       'summary_cost': summary_cost,
+                       'summary_leading': summary_leading,
+                       'avarage': average,
+                       'num_of_opinions': notices.count(),
+                       'num_of_rates': rates.count(),
+                       'add_pic': add_pic_form,
+                       'error': 'error'}
+
+                return render(request, 'rate_a_car_app/car-details.html', ctx)
+
+
 
 
 class AddNoticeView(LoginRequiredMixin, View):

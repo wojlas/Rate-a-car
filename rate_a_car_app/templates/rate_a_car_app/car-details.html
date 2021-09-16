@@ -9,6 +9,17 @@
     Model: {{ car.model }} <br>
     Wersja: {{ car.version }} <br>
     Lata produkcji: {{ car.production_from }} - {{ car.production_to }} <br>
+    Liczba ocen: {{ num_of_rates }} <br>
+    Liczba opini: {{ num_of_opinions }} <br><br><br>
+
+    Dodaj zdjęcie pojazdu:
+    <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        {{ add_pic.as_table }}
+    </table>
+    <input type="submit" value="Dodaj" name="image">
+    </form>
 
 {% endblock %}
 
@@ -30,12 +41,14 @@
     <table>
         {{ rate_form.as_table }}
     </table>
-    <input type="submit" value="Głosuj">
+    <input type="submit" value="Głosuj" name="rates">
     </form>
+        {% else %}
+        <h4>Tylko obecni lub byli użytkownicy pojazdu mogą go oceniać i komentować.</h4> <br>
+        <h6>Jeśli jeździłeś tym autem a nie masz go w swojej historii,
+            <a href="{% url 'car-history' user.username %}">dodaj go.</a> </h6>
     {% endif %}
-{% endblock %}
-
-{% block container4 %}
+    <br><br>
     {% if notice_form %}
 Napisz opinię o {{ car }}: <br>
     <form action="{% url 'add-notice' car.model car.version %}" method="post">
@@ -48,9 +61,18 @@ Napisz opinię o {{ car }}: <br>
     {% endif %}
 {% endblock %}
 
+{% block container4 %}
+    {% if images %}
+       {% for img in images %}
+        <img src="{{ img.image.url }}" alt="zdj {{ forloop.counter }}" height="75%" width="100%">
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
 {% block container5 %}
     Opinie: <br>
         {% for notice in notices %}
+            <img src="{{ notice.author.profile.avatar.url }}" height="30px" width="30px">
         <a href="{% url 'user-profile' notice.author %}"> {{ notice.author }}</a>({{ notice.date.date }}) <br>
             {{ notice.content}} <br>
 
@@ -60,6 +82,7 @@ Napisz opinię o {{ car }}: <br>
 {% block container6 %}
     Oceny: <br>
     {% for rate in rates %}
+        <img src="{{ rate.user.profile.avatar.url }}" height="30px" width="30px">
         <a href="{% url 'user-profile' rate.user %}"> {{ rate.user }}</a>({{ rate.date.date }}):<br>
         Wytrzymałość: {{ rate.endurance }} <br>
         Koszty: {{ rate.operation_cost }} <br>

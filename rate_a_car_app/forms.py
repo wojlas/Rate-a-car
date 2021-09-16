@@ -2,7 +2,7 @@ import django.forms as forms
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from .models import Brand, CarModel, CarOwners, Profile, Rate, Notice
+from .models import Brand, CarModel, CarOwners, Profile, Rate, Notice, Images
 
 
 class NewBrandForm(ModelForm):
@@ -101,3 +101,9 @@ class UpdateAvatarForm(ModelForm):
     class Meta:
         model = Profile
         fields = ['avatar']
+
+class UploadCarPictureForm(ModelForm):
+    class Meta:
+        model = Images
+        fields = ['image']
+        carmodel = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=CarModel.objects.all())

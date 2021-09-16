@@ -2,23 +2,26 @@
 {% block title %}
     Rate a Car
 {% endblock %}
+
 {% block container1 %}
+
     <table class="all-cars">
         <tr>
             <td colspan="2" align="center"><h4>Najwyżej oceniane:</h4></td>
         </tr>
-
         <tr>
             <td>Model</td>
             <td>Ocena</td>
         </tr>
+
         {% for car in best_cars %}
             <tr>
                 {% if car.average_rate %}
                     <td><a href="{% url 'car-details' car.model car.version %}"> {{ car }} </a></td>
                     <td>{{ car.average_rate }}</td><br>
+                    </tr>
                 {% endif %}
-            </tr>
+
         {% endfor %}
     </table>
 {% endblock %}
@@ -30,7 +33,7 @@
         <ul><h5>
             <img src="{{ notice.author.profile.avatar.url }}" height="30px" width="30px">
             <a href="{% url 'user-profile' notice.author.username %}">{{ notice.author.username }}</a>
-                <a href="{% url 'car-details' notice.car.model notice.car.version %}"> {{ notice.car }} </a></h5>
+            <a href="{% url 'car-details' notice.car.model notice.car.version %}"> {{ notice.car }} </a></h5>
             {{ notice.content }} <br><br>
         </ul>
     {% endfor %}
@@ -47,9 +50,9 @@
                 <a href="{% url 'user-profile' rate.user %}"> {{ rate.user.username }}</a>
                 <a href="{% url 'car-details' rate.carmodel.model rate.carmodel.version %}"> {{ rate.carmodel }} </a>
             </h5>
-            Wytrzymałość: {{ rate.endurance }}
+            Wytrzymałość: {{ rate.endurance }} <br>
             Koszty eksploatacji: {{ rate.operation_cost }} <br>
-            Prowadzenie: {{ rate.leading }}
+            Prowadzenie: {{ rate.leading }} <br>
             Wygląd: {{ rate.design }} <br>
         {% endfor %}
 
@@ -59,19 +62,24 @@
 {% block container4 %}
     <table class="all-cars">
         <tr>
-            <td colspan="3" align="center"><h4>Ostatnio dodane:</h4></td>
+            <td align="center"><h4>Ostatnio dodane:</h4></td>
         </tr>
-        <tr>
-            <td>Marka</td>
-            <td>Model</td>
-            <td>Wersja</td>
-        </tr>
+
         {% for car in new_cars %}
-        <tr>
-            <td><a href="{% url 'car-details' car.model car.version %}">{{ car.brand }}</a></td>
-            <td><a href="{% url 'car-details' car.model car.version %}">{{ car.model }}</a></td>
-            <td><a href="{% url 'car-details' car.model car.version %}">{{ car.version }}</a></td>
-        </tr>
+            <tr>
+                <td>
+                    <a href="{% url 'car-details' car.model car.version %}">{{ car.brand }} {{ car.model }} {{ car.version }}</a>
+                </td>
+
+            </tr>
         {% endfor %}
     </table>
+{% endblock %}
+
+{% block container5 %}
+       {% for img in random_images %}
+        <img src="{{ img.image.url }}" alt="zdj {{ forloop.counter }}" height="75%" width="100%">
+           <a href="{% url 'car-details' img.carmodel.model img.carmodel.version %}">
+               {{ img.carmodel.brand }} {{ img.carmodel.model }} {{ img.carmodel.version }}</a>
+        {% endfor %}
 {% endblock %}
