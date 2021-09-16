@@ -18,10 +18,10 @@ class IndexView(View):
     """
 
     def get(self, request):
-        new_cars = CarModel.objects.order_by('-date')[:10]
+        new_cars = CarModel.objects.order_by('-date')[:15]
         new_notices = Notice.objects.order_by('-date')[:10]
         new_rates = Rate.objects.order_by('-date')[:10]
-        best_cars = CarModel.objects.order_by('-average_rate')
+        best_cars = CarModel.objects.order_by('-average_rate')[:15]
         images_query = list(Images.objects.all())
         cnt = {'new_cars': new_cars,
                'new_notices': new_notices,

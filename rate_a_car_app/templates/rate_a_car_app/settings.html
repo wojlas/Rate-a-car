@@ -39,7 +39,7 @@
      {{ new_pass.as_table }}
  </table>
  <input type="submit" value="Zmień" name="password">
- </form>
+ </form><br><br>
     <form action="{% url 'delete-user' %}" method="post">
        {% csrf_token %}
        <button type="submit" onclick="return confirm('Usunąć konto?');">Usuń konto</button>

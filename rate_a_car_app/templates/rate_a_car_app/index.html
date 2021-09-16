@@ -18,7 +18,7 @@
             <tr>
                 {% if car.average_rate %}
                     <td><a href="{% url 'car-details' car.model car.version %}"> {{ car }} </a></td>
-                    <td>{{ car.average_rate }}</td><br>
+                    <td>{{ car.average_rate }}</td>
                     </tr>
                 {% endif %}
 
@@ -70,6 +70,7 @@
                 <td>
                     <a href="{% url 'car-details' car.model car.version %}">{{ car.brand }} {{ car.model }} {{ car.version }}</a>
                 </td>
+                <td>{{ car.date.date }}</td>
 
             </tr>
         {% endfor %}
