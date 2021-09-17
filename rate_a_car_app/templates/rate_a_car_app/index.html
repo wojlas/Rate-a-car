@@ -5,9 +5,9 @@
 
 {% block container1 %}
 
-    <table class="all-cars">
+    <table id="myTable">
         <tr>
-            <td colspan="2" align="center"><h4>Najwyżej oceniane:</h4></td>
+            <td colspan="2" align="center"><h5>Najwyżej oceniane:</h5></td>
         </tr>
         <tr>
             <td>Model</td>
@@ -60,9 +60,9 @@
 {% endblock %}
 
 {% block container4 %}
-    <table class="all-cars">
+    <table id="myTable">
         <tr>
-            <td align="center"><h4>Ostatnio dodane:</h4></td>
+            <td align="center"><h5>Ostatnio dodane:</h5></td>
         </tr>
 
         {% for car in new_cars %}

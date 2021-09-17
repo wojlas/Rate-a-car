@@ -1,9 +1,11 @@
+import json
 import random
 
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
 from django.core.paginator import Paginator
+from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import render, redirect
 # Create your views here.
 from django.views import View
@@ -18,10 +20,10 @@ class IndexView(View):
     """
 
     def get(self, request):
-        new_cars = CarModel.objects.order_by('-date')[:15]
+        new_cars = CarModel.objects.order_by('-date')[:10]
         new_notices = Notice.objects.order_by('-date')[:10]
         new_rates = Rate.objects.order_by('-date')[:10]
-        best_cars = CarModel.objects.order_by('-average_rate')[:15]
+        best_cars = CarModel.objects.order_by('-average_rate')[:10]
         images_query = list(Images.objects.all())
         cnt = {'new_cars': new_cars,
                'new_notices': new_notices,
@@ -370,12 +372,15 @@ class UserProfileView(View):
 
 class AddCarHistoryView(View):
     """Add car to user history"""
-
     def get(self, request, user):
         user = User.objects.get(username=user)
         form = AddCarsHistoryForm(initial={'owner': user.id})
+        cars = CarModel.objects.order_by('brand')
+        brands = Brand.objects.all()
         ctx = {'user_car_history': CarOwners.objects.filter(owner=Profile.objects.get(user=user)).order_by('use_from'),
-               'add_car': form}
+               'add_car': form,
+               'all_cars': cars,
+               'brands': brands,}
         return render(request, 'rate_a_car_app/car-history.html', ctx)
 
     def post(self, request, user):
@@ -385,7 +390,7 @@ class AddCarHistoryView(View):
         form = AddCarsHistoryForm(request.POST)
         if form.is_valid():
             car = form.cleaned_data['car']
-            CarOwners.objects.create(car_id=car.id,
+            CarOwners.objects.create(car_id=CarModel.objects.filter(model__in=car, version__in=car),
                                      owner=profile,
                                      use_from=form.cleaned_data['use_from'],
                                      use_to=form.cleaned_data['use_to'])

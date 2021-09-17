@@ -16,11 +16,27 @@
 {% endblock %}
 
 {% block container2 %}
-    Historia pojazdów: <br>
-     {% for car in cars %}
-        {{ forloop.counter }}. <a href="{% url 'car-details' car.car.model car.car.version %}">
-         {{ car.car }} </a> {{ car.use_from }} - {{ car.use_to }} <br>
+     <table id="myTable">
+        <tr><td align="center" colspan="5"><h3>Historia pojazdów</h3></td></tr>
+            <tr id="header">
+                <td align="center"> Marka </td>
+                <td align="center"> Model </td>
+                <td align="center"> Wersja </td>
+                <td align="center"> Użytkowany od </td>
+                <td align="center"> Użytkowany do </td>
+            </tr>
+        {% for car in cars %}
+            <tr id="myTR">
+                <td align="center"><a href="{% url 'car-brand' car.car.brand %}"> {{ car.car.brand }} </a></td>
+                <td align="center"><a href="{% url 'car-details' car.car.model car.car.version %}"> {{ car.car.model }} </a></td>
+                <td align="center"><a href="{% url 'car-details' car.car.model car.car.version %}"> {{ car.car.version }} </a></td>
+{#                <td align="center"><a href="{% url 'car-details' car.model car.version %}">{{ car.model }}({{ car.version }})</a></td>#}
+                <td align="center"><a href="{% url 'car-details' car.car.model car.car.version %}"> {{ car.use_from }} </a></td>
+                <td align="center"><a href="{% url 'car-details' car.car.model car.car.version %}"> {{ car.use_to }} </a></td>
+            </tr>
      {% endfor %}
+            </table>
+
 {% endblock %}
 
 {% block container3 %}

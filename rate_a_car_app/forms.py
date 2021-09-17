@@ -60,9 +60,9 @@ class AddCarsHistoryForm(ModelForm):
     """Form for add car to user history"""
     class Meta:
         model = CarOwners
-        fields = ['car','use_from', 'use_to']
-        # use_to = forms.CharField(widget=forms.IntegerField, max_length=4)
-        owner = forms.ModelChoiceField(widget=forms.IntegerField, queryset=User.objects.all())
+        fields = ['car', 'use_from', 'use_to']
+
+        owner = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=User.objects.all())
 
 class RateForm(ModelForm):
     """Form for car voted"""
