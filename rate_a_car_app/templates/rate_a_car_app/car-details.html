@@ -35,6 +35,7 @@
 {% endblock %}
 
 {% block container3 %}
+{% if user.is_authenticated %}
     {% if rate_form %}
     <form method="post">
     {% csrf_token %}
@@ -45,8 +46,14 @@
     </form>
         {% else %}
         <h4>Tylko obecni lub byli użytkownicy pojazdu mogą go oceniać i komentować.</h4> <br>
-        <h6>Jeśli jeździłeś tym autem a nie masz go w swojej historii,
+        <h6>Jeśli jeździłeś tym autem, a nie masz go w swojej historii,
+
             <a href="{% url 'car-history' user.username %}">dodaj go.</a> </h6>
+        {% endif %}
+            {% else %}
+            <br>
+            <a href="{% url 'login' %}"> Zaloguj się abo móc dodawać i oceniać samochody!</a>
+
     {% endif %}
     <br><br>
     {% if notice_form %}

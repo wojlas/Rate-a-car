@@ -77,14 +77,12 @@
     </table>
 {% endblock %}
 
+
+
 {% block container5 %}
        {% for img in random_images %}
         <img src="{{ img.image.url }}" alt="zdj {{ forloop.counter }}" height="75%" width="100%">
            <a href="{% url 'car-details' img.carmodel.model img.carmodel.version %}">
                {{ img.carmodel.brand }} {{ img.carmodel.model }} {{ img.carmodel.version }}</a>
         {% endfor %}
-{% endblock %}
-
-{% block container6 %}
- <div class="empty"></div>
 {% endblock %}

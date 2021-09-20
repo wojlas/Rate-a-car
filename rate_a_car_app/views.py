@@ -1,11 +1,9 @@
-import json
 import random
 
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
-from django.core.paginator import Paginator
-from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Count
 from django.shortcuts import render, redirect
 # Create your views here.
 from django.views import View
@@ -29,7 +27,7 @@ class IndexView(View):
                'new_notices': new_notices,
                'new_rates': new_rates,
                'best_cars': best_cars,
-               'random_images':random.sample(images_query, 3)}
+               'random_images': random.sample(images_query, 3)}
         return render(request, 'rate_a_car_app/index.html', cnt)
 
 
@@ -102,10 +100,10 @@ class RegisterView(View):
         if form.is_valid():
             if form.cleaned_data['password1'] == form.cleaned_data['password2']:
                 user = User.objects.create_user(username=form.cleaned_data['username'],
-                                           password=form.cleaned_data['password1'],
-                                           first_name=form.cleaned_data['first_name'],
-                                           last_name=form.cleaned_data['last_name'],
-                                           email=form.cleaned_data['email'])
+                                                password=form.cleaned_data['password1'],
+                                                first_name=form.cleaned_data['first_name'],
+                                                last_name=form.cleaned_data['last_name'],
+                                                email=form.cleaned_data['email'])
                 Profile.objects.create(user=user)
                 group = Group.objects.get(name='regular')
                 group.user_set.add(user)
@@ -226,7 +224,7 @@ class CarDetailsView(View):
                'summary_endurance': summary_endurance,
                'summary_cost': summary_cost,
                'summary_leading': summary_leading,
-               'avarage': round(average,2),
+               'avarage': round(average, 2),
                'num_of_opinions': notices.count(),
                'num_of_rates': rates.count(),
                'add_pic': add_pic_form,
@@ -339,8 +337,6 @@ class CarDetailsView(View):
                 return render(request, 'rate_a_car_app/car-details.html', ctx)
 
 
-
-
 class AddNoticeView(LoginRequiredMixin, View):
 
     def post(self, request, car, version):
@@ -355,11 +351,11 @@ class AddNoticeView(LoginRequiredMixin, View):
             return redirect(f"/cars/{car.model}/{car.version}/")
 
 
-class UserProfileView(View):
+class UserProfileView(LoginRequiredMixin, View):
     """Loged user profile
 
     View allows user to browse user informations, car history and last notices"""
-
+    login_url = '/login/'
     def get(self, request, user):
         user_obj = User.objects.get(username=user)
         cars = CarOwners.objects.filter(owner=Profile.objects.get(user=user_obj))
@@ -372,15 +368,15 @@ class UserProfileView(View):
 
 class AddCarHistoryView(View):
     """Add car to user history"""
+
     def get(self, request, user):
         user = User.objects.get(username=user)
         form = AddCarsHistoryForm(initial={'owner': user.id})
         cars = CarModel.objects.order_by('brand')
-        brands = Brand.objects.all()
         ctx = {'user_car_history': CarOwners.objects.filter(owner=Profile.objects.get(user=user)).order_by('use_from'),
                'add_car': form,
                'all_cars': cars,
-               'brands': brands,}
+               'car_count': CarOwners.objects.filter(owner=Profile.objects.get(user=user)).count()}
         return render(request, 'rate_a_car_app/car-history.html', ctx)
 
     def post(self, request, user):
@@ -390,7 +386,7 @@ class AddCarHistoryView(View):
         form = AddCarsHistoryForm(request.POST)
         if form.is_valid():
             car = form.cleaned_data['car']
-            CarOwners.objects.create(car_id=CarModel.objects.filter(model__in=car, version__in=car),
+            CarOwners.objects.create(car=car,
                                      owner=profile,
                                      use_from=form.cleaned_data['use_from'],
                                      use_to=form.cleaned_data['use_to'])
@@ -484,7 +480,7 @@ class SettingsView(View):
         if 'avatar' in request.POST:
             form = UpdateAvatarForm(request.POST)
             if form.is_valid():
-                profile= Profile.objects.get(user=request.user)
+                profile = Profile.objects.get(user=request.user)
                 profile.avatar = form.cleaned_data['avatar']
                 profile.save()
                 return redirect('/settings/')
@@ -500,8 +496,6 @@ class SettingsView(View):
                        'new_avatar': new_avatar_form,
                        'error': 'Coś poszło nie tak'}
                 return render(request, 'rate_a_car_app/settings.html', ctx)
-
-
 
 
 class DeleteAccount(LoginRequiredMixin, View):

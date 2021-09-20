@@ -10,7 +10,7 @@
     Nazwisko: {{ user.last_name }} <br>
     Email: {{ user.email }} <br>
     Data dołączenia: {{ user.date_joined.date }} <br>
-    Liczba aut:
+    Liczba aut: {{ car_count }}
 {% endblock %}
 
 {% block container2 %}
@@ -43,10 +43,9 @@
 {% endblock %}
 
 {% block container3 %}
-
     <form method="post">
     {% csrf_token %}
-    <table>
+    <table id="myUL">
        {{ add_car.as_table }}
     </table>
 
@@ -56,14 +55,6 @@
     <h5>Brak auta? <a href="{% url 'create-model' %}">Dodaj model</a> </h5>
 {% endblock %}
 
-
 {% block container4 %}
- <div class="empty"></div>
-{% endblock %}
-
-{% block container5 %}
- <div class="empty"></div>
-{% endblock %}
-{% block container6 %}
- <div class="empty"></div>
+     <div class="test"></div>
 {% endblock %}

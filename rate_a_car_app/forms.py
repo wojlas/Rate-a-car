@@ -64,6 +64,7 @@ class AddCarsHistoryForm(ModelForm):
 
         owner = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=User.objects.all())
 
+
 class RateForm(ModelForm):
     """Form for car voted"""
     class Meta:
