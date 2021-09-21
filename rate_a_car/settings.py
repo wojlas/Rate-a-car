@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rate_a_car_app.apps.RateACarAppConfig',
     'pytest_django',
-    'avatars'
 ]
 
 MIDDLEWARE = [
@@ -136,3 +135,11 @@ MEDIA_URL = '/avatars/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # new
+DEFAULT_FROM_EMAIL = 'wojlas93@gmail.com'
+EMAIL_HOST = 'smtp.sendgrid.net' # new
+EMAIL_HOST_USER = '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' # new
+EMAIL_HOST_PASSWORD = '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' # new
+EMAIL_PORT = 587 # new
+EMAIL_USE_TLS = True

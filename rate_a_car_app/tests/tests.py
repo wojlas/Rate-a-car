@@ -93,3 +93,8 @@ def test_car_details(client, cars_in_db):
     response = client.get(f'/cars/{car.model}/{car.version}/')
 
     assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_contact(client):
+    response = client.get('/contact/')
+    assert response.status_code == 200

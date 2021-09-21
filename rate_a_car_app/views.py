@@ -3,12 +3,14 @@ import random
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 # Create your views here.
 from django.views import View
 
 from .forms import LoginForm, NewBrandForm, NewModelForm, AddCarsHistoryForm, ForgotPassForm, RegisterUserForm, \
-    RateForm, NoticeForm, SettingsDataForm, SettingsChangePasswordForm, UpdateAvatarForm, UploadCarPictureForm
+    RateForm, NoticeForm, SettingsDataForm, SettingsChangePasswordForm, UpdateAvatarForm, UploadCarPictureForm, \
+    ContactForm
 from .models import Brand, CarModel, Profile, CarOwners, Rate, Notice, Images
 
 
@@ -504,3 +506,23 @@ class DeleteAccount(LoginRequiredMixin, View):
         u = request.user
         u.delete()
         return redirect('/')
+
+class ContactView(View):
+    def get(self, request):
+        ctx = {'form': ContactForm()}
+        return render(request, 'rate_a_car_app/contact.html', ctx)
+
+    def post(self, request):
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+            send_mail(subject, message, email, ['wojlas93@gmail.com'])
+            ctx = {'form': ContactForm(),
+                   'error': 'Wiadomość wysłana'}
+            return render(request, 'rate_a_car_app/contact.html', ctx)
+        else:
+            ctx = {'form': ContactForm(),
+                   'error': 'Uzupełnij wszystkie pola!'}
+            return render(request, 'rate_a_car_app/contact.html', ctx)

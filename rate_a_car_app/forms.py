@@ -108,3 +108,8 @@ class UploadCarPictureForm(ModelForm):
         model = Images
         fields = ['image']
         carmodel = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=CarModel.objects.all())
+
+class ContactForm(forms.Form):
+    email = forms.EmailField(required=True)
+    subject = forms.CharField(max_length=32, label='Temat', required=True)
+    message = forms.CharField(widget=forms.Textarea, label='Treść')
