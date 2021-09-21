@@ -19,7 +19,7 @@ class IndexView(View):
     """
 
     def get(self, request):
-        new_cars = CarModel.objects.order_by('-date')[:10]
+        new_cars = CarModel.objects.order_by('-date')[:9]
         new_notices = Notice.objects.order_by('-date')[:10]
         new_rates = Rate.objects.order_by('-date')[:10]
         best_cars = CarModel.objects.order_by('-average_rate')[:9]
@@ -298,7 +298,7 @@ class CarDetailsView(View):
                 car = CarModel.objects.get(model=car, version=version)
                 owners = CarOwners.objects.filter(car=car)
                 notices = Notice.objects.filter(car=car)
-                add_pic_form = UploadCarPictureForm
+                add_pic_form = UploadCarPictureForm()
 
                 if request.user in [own.owner.user for own in owners]:
                     rate_form = RateForm(initial={'carmodel': car,
@@ -480,7 +480,7 @@ class SettingsView(View):
                 return render(request, 'rate_a_car_app/settings.html', ctx)
 
         if 'avatar' in request.POST:
-            form = UpdateAvatarForm(request.POST)
+            form = UpdateAvatarForm(request.POST, request.FILES)
             if form.is_valid():
                 profile = Profile.objects.get(user=request.user)
                 profile.avatar = form.cleaned_data['avatar']

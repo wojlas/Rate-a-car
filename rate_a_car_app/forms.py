@@ -107,7 +107,7 @@ class UploadCarPictureForm(ModelForm):
     class Meta:
         model = Images
         fields = ['image']
-        carmodel = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=CarModel.objects.all())
+        # carmodel = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=CarModel.objects.all())
 
 class ContactForm(forms.Form):
     email = forms.EmailField(required=True)

@@ -62,8 +62,12 @@
 {% block container4 %}
     <table id="myTable">
         <tr>
-            <td align="center"><h5>Ostatnio dodane:</h5></td>
+            <td align="center" colspan="2"><h5>Ostatnio dodane:</h5></td>
         </tr>
+    <tr>
+        <td> Samochód </td>
+        <td> Data </td>
+    </tr>
 
         {% for car in new_cars %}
             <tr>

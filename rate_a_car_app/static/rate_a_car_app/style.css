@@ -101,7 +101,7 @@ ol > li:hover > a {
     border: #DDDDDD solid;
     align-items: stretch;
     width: 50%;
-    height: 500px;
+    height: 550px;
     align-content: center;
     overflow: inherit;
 }
@@ -121,7 +121,7 @@ ol > li:hover > a {
     padding: 0;
     border: #DDDDDD solid;
     width: 33%;
-    height: 500px;
+    height: 550px;
     align-content: center;
     overflow: auto;
     overflow: inherit;

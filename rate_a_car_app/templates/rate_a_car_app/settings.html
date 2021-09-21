@@ -3,7 +3,7 @@
  {{ user.username }} ustawienia | Rate a Car
 {% endblock %}
 {% block container1 %}
-    <img src="rate_a_car/avatars{{ user.profile.avatar.url }}" height="200px" width="200px" alt="avatar"><br>
+    <img src="{{ user.profile.avatar.url }}" height="200px" width="200px" alt="avatar"><br>
     Informacje:<br>
     Nazwa użytkownika: {{ user.username }} <br>
     Imię: {{ user.first_name }} <br>
@@ -22,7 +22,7 @@
  </table>
  <input type="submit" value="Zmień" name="data">
  </form> <br>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <table>
         {{ new_avatar }}
