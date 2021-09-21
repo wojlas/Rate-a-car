@@ -1,7 +1,9 @@
+from PIL import Image
 from django.contrib.auth.models import User
 from faker import Faker
+import io
 
-from rate_a_car_app.models import CarModel, Brand
+from rate_a_car_app.models import CarModel, Brand, Images
 
 faker = Faker("pl_PL")
 
@@ -23,7 +25,8 @@ def create_fake_user_with_second_pass():
     return data
 
 def fake_brand():
-    return {'brand': faker.name()}
+    d = faker.simple_profile()
+    return {'brand': d['username']}
 
 def create_fake_same_pass():
     password = faker.name()
@@ -31,12 +34,27 @@ def create_fake_same_pass():
             'password2': password}
 
 def fake_car_data():
-    brand = Brand.objects.first()
-    return {'brand': brand.id,
+    return {'brand': Brand.objects.first(),
             'model': faker.name(),
             'version': faker.name(),
-            'production_from': faker.pyint(max_value=2021),
+            'production_from': faker.pyint(max_value=1980),
             'production_to': faker.pyint(max_value=2021)}
 
 def create_car_brand():
     Brand.objects.create(**fake_brand())
+
+def create_car_models():
+    CarModel.objects.create(**fake_car_data())
+
+def generate_photo_file():
+    file = io.BytesIO()
+    image = Image.new('RGBA', size=(100, 100), color=(155, 0, 0))
+    image.save(file, 'png')
+    file.name = 'test.png'
+    file.seek(0)
+    return file
+
+def upload_photo():
+    model = CarModel.objects.first()
+    Images.objects.create(carmodel=model,
+                          image=generate_photo_file())

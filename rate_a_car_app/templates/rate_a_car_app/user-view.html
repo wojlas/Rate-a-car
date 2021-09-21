@@ -43,7 +43,7 @@
     Ostatnie opinie: <br>
     {% for notice in notices %}
 
-        <h4>{{ notice.car }} {{ notice.date.date }}</h4> <br>
+        <h4><a href="{% url 'car-details' notice.car.model notice.car.version %}"> {{ notice.car }}</a> {{ notice.date.date }}</h4> <br>
         {{ notice.content }}
 
     {% endfor %}

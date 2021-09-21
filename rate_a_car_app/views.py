@@ -3,7 +3,6 @@ import random
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
-from django.db.models import Count
 from django.shortcuts import render, redirect
 # Create your views here.
 from django.views import View
@@ -21,7 +20,7 @@ class IndexView(View):
         new_cars = CarModel.objects.order_by('-date')[:10]
         new_notices = Notice.objects.order_by('-date')[:10]
         new_rates = Rate.objects.order_by('-date')[:10]
-        best_cars = CarModel.objects.order_by('-average_rate')[:10]
+        best_cars = CarModel.objects.order_by('-average_rate')[:9]
         images_query = list(Images.objects.all())
         cnt = {'new_cars': new_cars,
                'new_notices': new_notices,
@@ -191,7 +190,7 @@ class CarDetailsView(View):
     def get(self, request, version, car):
         car = CarModel.objects.get(model=car, version=version)
         owners = CarOwners.objects.filter(car=car)
-        notices = Notice.objects.filter(car=car)
+        notices = Notice.objects.filter(car=car).order_by('-date')
         add_pic_form = UploadCarPictureForm(initial={'carmodel': car})
 
         if request.user in [own.owner.user for own in owners]:
@@ -356,6 +355,7 @@ class UserProfileView(LoginRequiredMixin, View):
 
     View allows user to browse user informations, car history and last notices"""
     login_url = '/login/'
+
     def get(self, request, user):
         user_obj = User.objects.get(username=user)
         cars = CarOwners.objects.filter(owner=Profile.objects.get(user=user_obj))
@@ -418,7 +418,7 @@ class SettingsView(View):
                                          'last_name': request.user.last_name,
                                          'email': request.user.email})
         new_password_form = SettingsChangePasswordForm()
-        new_avatar_form = UpdateAvatarForm
+        new_avatar_form = UpdateAvatarForm()
         ctx = {'form': form,
                'new_pass': new_password_form,
                'new_avatar': new_avatar_form}

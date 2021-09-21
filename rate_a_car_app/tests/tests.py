@@ -1,9 +1,9 @@
 import pytest
 from django.contrib.auth.models import User
 
-from rate_a_car_app.models import Brand, Profile, CarModel
+from rate_a_car_app.models import Brand, Profile, CarModel, Images
 from rate_a_car_app.tests.utils import create_fake_user_with_second_pass, fake_brand, create_fake_same_pass, \
-    fake_car_data
+    fake_car_data, create_car_models
 
 
 @pytest.mark.django_db
@@ -18,9 +18,8 @@ def test_register_view(client, set_up):
 
 
 @pytest.mark.django_db
-def test_index_view(client):
+def test_index_view(client, img):
     response = client.get('/')
-
     assert response.status_code == 200
 
 
@@ -57,7 +56,7 @@ def test_forgot_pass(client, set_up):
 
 
 @pytest.mark.django_db
-def test_add_brand(client):
+def test_add_brand(client, new_car):
     brands_before = Brand.objects.count()
     new_brand = fake_brand()
     response = client.post('/create-brand/', {**new_brand})
@@ -67,17 +66,12 @@ def test_add_brand(client):
 
 
 @pytest.mark.django_db
-def test_create_model(client, new_car):
+def test_create_model(client, cars_in_db):
     models_before = CarModel.objects.count()
     new_model = fake_car_data()
-    response = client.post('/create-model/', new_model)
+    response = client.post('/create-model/', {**new_model})
     assert response.status_code == 302
-    # assert CarModel.objects.count() == models_before + 1
-    # assert CarModel.objects.filter(brand=new_model['brand'],
-    #                                model=new_model['model'],
-    #                                version= new_model['version'],
-    #                                production_from=new_model['production_from'],
-    #                                production_to=new_model['production_to'])
+
 
 @pytest.mark.django_db
 def test_browse_car(client):
@@ -90,5 +84,12 @@ def test_browse_car_model(client):
     new_brand = fake_brand()
     new_brand_response = client.post('/create-brand/', {**new_brand})
     response = client.get(f"/cars/{new_brand['brand']}/")
+
+    assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_car_details(client, cars_in_db):
+    car = CarModel.objects.first()
+    response = client.get(f'/cars/{car.model}/{car.version}/')
 
     assert response.status_code == 200
