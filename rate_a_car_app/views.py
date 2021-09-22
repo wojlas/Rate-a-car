@@ -109,6 +109,9 @@ class RegisterView(View):
                 Profile.objects.create(user=user)
                 group = Group.objects.get(name='regular')
                 group.user_set.add(user)
+                profile = Profile.objects.get(user=user)
+                profile.avatar = 'avatars/deflaut.png'
+                profile.save()
                 return redirect('/login/')
             else:
                 form_user = RegisterUserForm()

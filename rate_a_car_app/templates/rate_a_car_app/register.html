@@ -4,7 +4,7 @@ Rejestracja | Rate-a-Car
 {% endblock %}
 
 {% block container2 %}
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <table>
         {{ form_user.as_table }}
