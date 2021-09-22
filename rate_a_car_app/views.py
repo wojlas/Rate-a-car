@@ -1,9 +1,10 @@
+import os
 import random
 
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
-from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
 from django.shortcuts import render, redirect
 # Create your views here.
 from django.views import View
@@ -19,10 +20,10 @@ class IndexView(View):
     """
 
     def get(self, request):
-        new_cars = CarModel.objects.order_by('-date')[:9]
+        new_cars = CarModel.objects.order_by('-date')[:10]
         new_notices = Notice.objects.order_by('-date')[:10]
         new_rates = Rate.objects.order_by('-date')[:10]
-        best_cars = CarModel.objects.order_by('-average_rate')[:9]
+        best_cars = CarModel.objects.order_by('-average_rate')[:10]
         images_query = list(Images.objects.all())
         cnt = {'new_cars': new_cars,
                'new_notices': new_notices,
@@ -507,6 +508,7 @@ class DeleteAccount(LoginRequiredMixin, View):
         u.delete()
         return redirect('/')
 
+
 class ContactView(View):
     def get(self, request):
         ctx = {'form': ContactForm()}
@@ -518,11 +520,23 @@ class ContactView(View):
             subject = form.cleaned_data['subject']
             email = form.cleaned_data['email']
             message = form.cleaned_data['message']
-            send_mail(subject, message, email, ['wojlas93@gmail.com'])
-            ctx = {'form': ContactForm(),
-                   'error': 'Wiadomość wysłana'}
+            reciver = ['wojlas93@gmail.com']
+            try:
+                send_mail(subject, message, email, reciver)
+                ctx = {'form': ContactForm(),
+                       'error': 'Wiadomość wysłana'}
+            except BadHeaderError:
+                ctx = {'form': ContactForm(),
+                       'error': 'BŁĄD!'}
             return render(request, 'rate_a_car_app/contact.html', ctx)
         else:
             ctx = {'form': ContactForm(),
                    'error': 'Uzupełnij wszystkie pola!'}
             return render(request, 'rate_a_car_app/contact.html', ctx)
+
+class RegulationsView(View):
+    def get(self, request):
+        statut = open("rate_a_car_app/statut.txt", "r", encoding='utf-8')
+
+        ctx = {'statut': statut.read()}
+        return render(request, 'rate_a_car_app/regulations.html', ctx)

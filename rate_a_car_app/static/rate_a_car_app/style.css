@@ -94,6 +94,11 @@ ol > li:hover > a {
     align-content: center;
 }
 
+.grid-content:not(children) {
+    border: 0;
+    display: none;
+}
+
 .grid-content > .container1 {
     float: left;
     margin-right: 10px;
@@ -101,7 +106,7 @@ ol > li:hover > a {
     border: #DDDDDD solid;
     align-items: stretch;
     width: 50%;
-    height: 550px;
+    height: 530px;
     align-content: center;
     overflow: inherit;
 }
@@ -121,7 +126,7 @@ ol > li:hover > a {
     padding: 0;
     border: #DDDDDD solid;
     width: 33%;
-    height: 550px;
+    height: 530px;
     align-content: center;
     overflow: auto;
     overflow: inherit;

@@ -1,5 +1,7 @@
 const help =document.querySelector(".helptext");
 
+border(containers);
+
 help.hidden = true;
 
 function myFunction() {

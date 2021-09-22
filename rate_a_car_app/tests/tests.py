@@ -16,7 +16,7 @@ def test_register_view(client, set_up):
     assert User.objects.filter(username=new_user['username'])
     assert Profile.objects.get(user__username=new_user['username'])
 
-
+@pytest.mark.skip('Waiting for image fixture')
 @pytest.mark.django_db
 def test_index_view(client, img):
     response = client.get('/')
@@ -97,4 +97,9 @@ def test_car_details(client, cars_in_db):
 @pytest.mark.django_db
 def test_contact(client):
     response = client.get('/contact/')
+    assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_regulations(client):
+    response = client.get('/regulations/')
     assert response.status_code == 200
