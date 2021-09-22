@@ -4,6 +4,7 @@ Logowanie | Rate-a-Car
 {% endblock %}
 
 {% block container2 %}
+    <div align="center">
     <form method="post">
     {% csrf_token %}
     <table>
@@ -15,6 +16,6 @@ Logowanie | Rate-a-Car
     </form>
 
     {{ error }}
-
+    </div>
 {% endblock %}
 

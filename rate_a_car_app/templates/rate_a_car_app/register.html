@@ -4,6 +4,7 @@ Rejestracja | Rate-a-Car
 {% endblock %}
 
 {% block container2 %}
+    <div align="center">
     <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <table>
@@ -14,6 +15,7 @@ Rejestracja | Rate-a-Car
 
 
     {{ error }}
+    </div>
 
 {% endblock %}
 

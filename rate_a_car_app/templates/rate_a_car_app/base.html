@@ -35,7 +35,7 @@
                 <ul>
                     <li><a href="{% url 'contact' %}">Kontakt</a></li>
                     <li><a href="{% url 'statut' %}">Regulamin</a></li>
-                    <li><a href="#">FAQ</a></li>
+                    <li><a href="{% url 'faq' %}">FAQ</a></li>
                 </ul>
             </li>
         </ol>
@@ -43,32 +43,13 @@
 </div>
 
 <div class="grid-content first">
-    <div class="container1 1">
-        {% block container1 %}
-        {% endblock %}
-    </div>
-    <div class="container1 2">
-        {% block container2 %}
-
-        {% endblock %}
-    </div>
-    <div class="container1 3">
-        {% block container3 %}
-
-        {% endblock %}
-    </div>
+    <div class="container1 1">{% block container1 %}{% endblock %}</div>
+    <div class="container1 2">{% block container2 %}{% endblock %}</div>
+    <div class="container1 3">{% block container3 %}{% endblock %}</div>
 </div>
 <div class="grid-content second">
-    <div class="container2 1">
-        {% block container4 %}
-
-        {% endblock %}
-    </div>
-    <div class="container2 2">
-        {% block container5 %}
-
-        {% endblock %}
-    </div>
+    <div class="container2 1">{% block container4 %}{% endblock %}</div>
+    <div class="container2 2">{% block container5 %}{% endblock %}</div>
     <div class="container2 3">{% block container6 %}{% endblock %}</div>
 </div>
 
@@ -84,7 +65,7 @@
     <a href="{% url 'logout' %}">Wyloguj</a>
     {% endif %}
     <a href="{% url 'contact' %}">Kontakt</a>
-    <a href="#">FAQ</a>
+    <a href="{% url 'faq' %}">FAQ</a>
     <a href="#top">Do góry</a>
 </footer>
 </html>

@@ -1,0 +1,38 @@
+{% extends 'rate_a_car_app/base.html' %}
+{% block title %}
+FAQ | Rate a Car
+{% endblock %}
+
+{% block container1 %}
+    <div class="topics" align="center">
+    <h4> Tematy: </h4><br>
+        <li><a href="#about">Co to Rate a Car</a></li> <br>
+        <li><a href="#top1">Dlaczego nie mogę głosować i komentować pojazdu?</a></li> <br>
+        <li><a href="#top2">Jak dodać samochód do historii</a></li> <br>
+        <li><a href="#top3">Mojego samochodu nie ma na liście</a></li> <br>
+        <li><a href="#top4">Zapomniałem hasła, co zrobić?</a></li> <br>
+        <li><a href="#top5">Chcę zmienić dane</a></li> <br>
+    </div>
+{% endblock %}
+
+{% block container2 %}
+    <div class="questions" align="center">
+    <h4>Najczęściej zadawane pytania:</h4><br>
+        <div id="about"><b>Co to Rate a Car</b> <br>
+        Rate a Car to portal dla ludzi chcących poznać opinię kierowców na temat samochodów którymi sami jeździli.
+        </div><br>
+        <div id="top1"><b>Dlaczego nie mogę głosować i komentować pojazdu?</b><br>
+        Aby opinia nt. auta była jak najbardziej wiarygodna, głosować i komentować mogą jedynie użytkownicy posiadający
+        dany samochód w swojej historii pojazdów.</div><br>
+        <div id="top2"><b>Jak dodać samochód do historii</b><br>
+            Można zrobić to poprzez zakladkę <i>Historia pojazdów</i> w górnym menu strony.</div><br>
+        <div id="top3"><b>Mojego samochodu nie ma na liście</b><br>
+        Poniżej formularza dodawania auta do historii znajduje się odnośnik do formluarza dodającego nowe auto do bazy.</div><br>
+        <div id="top4"><b>Zapomniałem hasła, co zrobić?</b><br>
+        Na stronie logowania znajduje się odnośnik do resetu hasła.</div><br>
+        <div id="top5"><b>Chce zmienić dane</b><br>
+        Wszystkie dane oraz avatar można zmienić w ustawieniach użytkownika, odnośmnik w górnym menu.</div> <br>
+
+
+    </div>
+{% endblock %}

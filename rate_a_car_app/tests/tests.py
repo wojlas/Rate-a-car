@@ -103,3 +103,8 @@ def test_contact(client):
 def test_regulations(client):
     response = client.get('/regulations/')
     assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_faq(client):
+    response = client.get('/faq/')
+    assert response.status_code == 200

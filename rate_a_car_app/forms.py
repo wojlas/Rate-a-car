@@ -74,6 +74,7 @@ class RateForm(ModelForm):
         user = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=User.objects.all())
 
 class NoticeForm(ModelForm):
+    """ModelForm for add notice to carmodel"""
     class Meta:
         model = Notice
         exclude = ['date', 'author', 'car']
@@ -81,16 +82,19 @@ class NoticeForm(ModelForm):
         car = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=CarModel.objects.all())
 
 class SettingsDataForm(ModelForm):
+    """Change user data form in settings view"""
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
 
 class SettingsChangePasswordForm(forms.Form):
+    """Form for change password from settings view"""
     old_password = forms.CharField(widget=forms.PasswordInput, label='Podaj obecne hasło')
     password1 = forms.CharField(widget=forms.PasswordInput, label='Nowe hasło')
     password2 = forms.CharField(widget=forms.PasswordInput, label='Powtórz hasło')
 
     def clean(self):
+        """Validate same passwords"""
         cleaned_data = super(SettingsChangePasswordForm, self).clean()
         password1 = cleaned_data.get("password1")
         password2 = cleaned_data.get("password2")
@@ -99,17 +103,21 @@ class SettingsChangePasswordForm(forms.Form):
             raise forms.ValidationError('Hasła muszą być identyczne')
 
 class UpdateAvatarForm(ModelForm):
+    """Form for update avatar
+
+    Every user gets default avatar but can change it"""
     class Meta:
         model = Profile
         fields = ['avatar']
 
 class UploadCarPictureForm(ModelForm):
+    """Upload car picture form"""
     class Meta:
         model = Images
         fields = ['image']
-        # carmodel = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=CarModel.objects.all())
 
 class ContactForm(forms.Form):
+    """Form for email contact with admin"""
     email = forms.EmailField(required=True)
     subject = forms.CharField(max_length=32, label='Temat', required=True)
     message = forms.CharField(widget=forms.Textarea, label='Treść')

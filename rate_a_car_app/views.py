@@ -505,7 +505,7 @@ class SettingsView(View):
 
 
 class DeleteAccount(LoginRequiredMixin, View):
-
+    """Delete account view with popup confirm"""
     def post(self, request):
         u = request.user
         u.delete()
@@ -513,6 +513,7 @@ class DeleteAccount(LoginRequiredMixin, View):
 
 
 class ContactView(View):
+    """Email contact with admin"""
     def get(self, request):
         ctx = {'form': ContactForm()}
         return render(request, 'rate_a_car_app/contact.html', ctx)
@@ -538,8 +539,14 @@ class ContactView(View):
             return render(request, 'rate_a_car_app/contact.html', ctx)
 
 class RegulationsView(View):
+    """App statut"""
     def get(self, request):
         statut = open("rate_a_car_app/statut.txt", "r", encoding='utf-8')
 
         ctx = {'statut': statut.read()}
         return render(request, 'rate_a_car_app/regulations.html', ctx)
+
+class FAQView(View):
+    """Frequently Asked Questions"""
+    def get(self, request):
+        return render(request, 'rate_a_car_app/faq.html')
