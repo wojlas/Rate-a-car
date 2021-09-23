@@ -17,7 +17,8 @@
 
 {% block container2 %}
      <table id="myTable">
-        <tr><td align="center" colspan="5"><h3>Historia pojazdów</h3></td></tr>
+        <tr id="topic"><td  colspan="4"><h3>Historia pojazdów</h3></td>
+        <td><h6><a href="{% url 'car-history' user.username %}">Dodaj</a></h6></td></tr>
             <tr id="header">
                 <td align="center"> Marka </td>
                 <td align="center"> Model </td>

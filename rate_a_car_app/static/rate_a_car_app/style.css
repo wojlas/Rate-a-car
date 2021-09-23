@@ -110,7 +110,6 @@ ol > li:hover > a {
 
 .grid-content > .container1:empty {
     border: 0;
-    display: none;
 }
 
 .grid-content > .container1:first-child {
@@ -136,7 +135,6 @@ ol > li:hover > a {
 
 .grid-content > .container2:empty {
     border: 0;
-    display: none;
 }
 
 
@@ -192,6 +190,10 @@ body {
 a {
     text-decoration: none;
     color: black;
+}
+
+#myTable tr.topic {
+    text-align: center;
 }
 
 #myCar {
