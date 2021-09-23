@@ -1,4 +1,5 @@
 import pytest
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 
 from rate_a_car_app.models import Brand, Profile, CarModel, Images
@@ -29,7 +30,9 @@ def test_login_view(client, set_up):
     register_response = client.post('/register/', new_user)
     response = client.post('/login/', {'login': new_user['username'],
                                        'password': new_user['password']})
+    user = authenticate(username=new_user['username'], password=new_user['password'])
     assert response.status_code == 302
+    assert user == True
 
 
 @pytest.mark.django_db
