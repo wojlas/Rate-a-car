@@ -11,8 +11,8 @@ def fake_user():
     d = faker.simple_profile()
     return {'username': d['username'],
             'password': faker.name(),
-            'first_name': faker.name(),
-            'last_name': faker.name(),
+            'first_name': faker.first_name(),
+            'last_name': faker.last_name(),
             'email': faker.email()}
 
 def create_fake_user():
@@ -35,8 +35,8 @@ def create_fake_same_pass():
 
 def fake_car_data():
     return {'brand': Brand.objects.first(),
-            'model': faker.name(),
-            'version': faker.name(),
+            'model': faker.last_name(),
+            'version': faker.last_name(),
             'production_from': faker.pyint(max_value=1980),
             'production_to': faker.pyint(max_value=2021)}
 

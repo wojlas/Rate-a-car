@@ -89,6 +89,7 @@ class CarOwners(models.Model):
     """Many to many table between models CarModel and Profile"""
     class Meta:
         verbose_name_plural = 'CarOwners'
+
     car = models.ForeignKey(CarModel, on_delete=models.CASCADE, verbose_name='Samochód')
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     use_from = models.IntegerField(null=False, verbose_name='Od')

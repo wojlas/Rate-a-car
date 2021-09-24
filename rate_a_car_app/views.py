@@ -460,7 +460,7 @@ class SettingsView(View):
         if 'password' in request.POST:
             form = SettingsChangePasswordForm(request.POST)
             if form.is_valid():
-                if request.user.password == form.cleaned_data['password1']:
+                if user.password == form.cleaned_data['password1']:
                     form = SettingsDataForm(initial={'username': request.user.username,
                                                      'first_name': request.user.first_name,
                                                      'last_name': request.user.last_name,
@@ -471,7 +471,7 @@ class SettingsView(View):
                            'error_pass': 'Nowe hasło musi się różnić od poprzedniego'}
                     return render(request, 'rate_a_car_app/settings.html', ctx)
                 else:
-                    request.user.set_password = form.cleaned_data['password1']
+                    user.set_password = form.cleaned_data['password1']
                     return redirect('/settings/')
             else:
                 form = SettingsDataForm(initial={'username': request.user.username,
@@ -483,7 +483,7 @@ class SettingsView(View):
                 ctx = {'form': form,
                        'new_pass': new_password_form,
                        'new_avatar': new_avatar_form,
-                       'error': 'Coś poszło nie tak'}
+                       'error_pass': 'Coś poszło nie tak'}
                 return render(request, 'rate_a_car_app/settings.html', ctx)
 
         if 'avatar' in request.POST:
