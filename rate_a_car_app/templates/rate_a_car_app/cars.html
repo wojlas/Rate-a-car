@@ -26,10 +26,11 @@
         {% for car in new_car %}
             <tr id="myTR">
                 <td align="center"><a href="{% url 'car-details' car.model car.version %}"> {{ car.brand }} {{ car.model }}({{ car.version }})</a></td>
-{#                <td align="center"><a href="{% url 'car-details' car.model car.version %}">{{ car.model }}({{ car.version }})</a></td>#}
                 <td align="center"><a href="{% url 'car-details' car.model car.version %}"> {{ car.production_from }} </a></td>
                 <td align="center"><a href="{% url 'car-details' car.model car.version %}"> {{ car.production_to }} </a></td>
+                {% if car.average_rate %}
                 <td align="center"><a href="{% url 'car-details' car.model car.version %}"> {{ car.average_rate }} </a></td>
+            {% endif %}
             </tr>
         {% endfor %}
     </table>

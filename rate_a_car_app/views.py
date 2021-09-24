@@ -23,14 +23,13 @@ class IndexView(View):
         new_cars = CarModel.objects.order_by('-date')[:10]
         new_notices = Notice.objects.order_by('-date')[:10]
         new_rates = Rate.objects.order_by('-date')[:10]
-        best_cars = CarModel.objects.order_by('-average_rate')[:10]
-        # images_query = list(Images.objects.all())
+        best_cars = CarModel.objects.filter(average_rate__isnull=False).order_by('-average_rate')[:10]
+        images_query = list(Images.objects.all())
         cnt = {'new_cars': new_cars,
                'new_notices': new_notices,
                'new_rates': new_rates,
                'best_cars': best_cars,
-               # 'random_images': random.sample(images_query, 3)
-               }
+               'random_images': random.sample(images_query, 3)}
         return render(request, 'rate_a_car_app/index.html', cnt)
 
 

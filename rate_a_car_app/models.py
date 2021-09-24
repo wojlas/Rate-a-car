@@ -87,4 +87,4 @@ class CarOwners(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     use_from = models.IntegerField(null=False, verbose_name='Od')
     use_to = models.CharField(default='-', max_length=4, verbose_name='Do')
-    notice = models.ForeignKey(Notice, on_delete=models.CASCADE, null=True)
+    notice = models.ForeignKey(Notice, on_delete=models.CASCADE, null=True, blank=True)
