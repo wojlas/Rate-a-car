@@ -18,8 +18,9 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from rate_a_car_app.views import IndexView, LoginView, LogoutView, NewBrandView, NewModelView, BrowseCarView, \
-    UserProfileView, CarDetailsView, BrowseBrandModelsView, AddCarHistoryView, ForgotPassView, RegisterView, \
-    RemoveFromHistoryView, AddNoticeView, SettingsView, DeleteAccount, ContactView, RegulationsView, FAQView
+    UserProfileView, CarDetailsView, BrowseBrandModelsView, CarHistoryView, ForgotPassView, RegisterView, \
+    RemoveFromHistoryView, AddNoticeView, SettingsView, DeleteAccount, ContactView, RegulationsView, FAQView,\
+    AddCarHistoryFormView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,7 +38,8 @@ urlpatterns = [
     path('cars/<str:car>/<str:version>/', CarDetailsView.as_view(), name='car-details'),
     path('cars/<str:car>/<str:version>/notice/', AddNoticeView.as_view(), name='add-notice'),
     path('profile/user/<str:user>/', UserProfileView.as_view(), name='user-profile'),
-    path('profile/history/<str:user>/', AddCarHistoryView.as_view(), name='car-history'),
+    path('profile/history/<str:user>/', CarHistoryView.as_view(), name='car-history'),
+    path('profile/history/<str:user>/add/<str:model>/<str:version>/', AddCarHistoryFormView.as_view(), name='add-form'),
     path('profile/history/<str:user>/<str:car>/<str:version>/remove', RemoveFromHistoryView.as_view(), name='remove-car'),
     path('contact/', ContactView.as_view(), name='contact'),
     path('regulations/', RegulationsView.as_view(), name='statut'),

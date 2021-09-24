@@ -229,3 +229,33 @@ a {
   background-color: #eee; /* Add a hover effect to all links, except for headers */
 }
 
+#historyTable {
+  border-collapse: collapse; /* Collapse borders */
+  width: 100%; /* Full-width */
+  border: 1px solid #ddd; /* Add a grey border */
+  font-size: 16px; /* Increase font-size */
+}
+
+#historyTable th, #historyTable td {
+  text-align: left; /* Left-align text */
+  padding: 10px; /* Add padding */
+}
+
+#historyTable tr {
+  /* Add a bottom border to all table rows */
+  border-bottom: 1px solid #ddd;
+}
+
+#historyTable tr.header, #historyTable tr:hover {
+  /* Add a grey background color to the table header and on hover */
+  background-color: #f1f1f1;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+#historyTable tr.topic {
+    text-align: center;
+}

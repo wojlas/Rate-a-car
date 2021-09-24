@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 
-from rate_a_car_app.models import Profile, Brand, CarModel, Rate, CarOwners
+from rate_a_car_app.models import Profile, Brand, CarModel, Rate, CarOwners, Notice
 
 admin.site.register(Brand)
 
@@ -20,3 +20,7 @@ class ProfileAdmin(admin.ModelAdmin):
 admin.site.register(Rate)
 
 admin.site.register(CarOwners)
+
+@admin.register(Notice)
+class NoticeAdmin(admin.ModelAdmin):
+    list_display = ['author', 'car', 'date', 'content']

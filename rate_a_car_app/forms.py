@@ -58,11 +58,11 @@ class RegisterUserForm(ModelForm):
 
 class AddCarsHistoryForm(ModelForm):
     """Form for add car to user history"""
+    car = forms.ModelChoiceField(queryset=CarModel.objects.all(), label='Wybrany samochód', widget=forms.HiddenInput)
     class Meta:
         model = CarOwners
         fields = ['car', 'use_from', 'use_to']
 
-        owner = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=User.objects.all())
 
 
 class RateForm(ModelForm):

@@ -15,7 +15,7 @@
 
 {% block container2 %}
     <h4>Historia pojazdów {{ user.username }}</h4> <br>
-    <table id="myTable">
+    <table id="historyTable">
     <tr>
         <td>id</td>
         <td>Marka</td>
@@ -43,14 +43,20 @@
 {% endblock %}
 
 {% block container3 %}
-    <form method="post">
-    {% csrf_token %}
-    <table id="myUL">
-       {{ add_car.as_table }}
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Wyszukaj auto">
+    <table id="myTable">
+        <tr><td align="center" colspan="2"><h3>Dodaj auto</h3></td></tr>
+            <tr id="header">
+                <td align="center"> Marka </td>
+                <td align="center"> Dodaj </td>
+            </tr>
+        {% for car in all_cars %}
+            <tr id="myTR">
+                <td align="center"><a href="{% url 'car-details' car.model car.version %}"> {{ car.brand }} {{ car.model }}({{ car.version }})</a></td>
+                <td align="center"><a href="{% url 'add-form' request.user.username car.model car.version %}"><button>Dodaj</button> </a></td>
+            </tr>
+        {% endfor %}
     </table>
-
-    <input type="submit" value="Dodaj">
-    </form>
 
     <h5>Brak auta? <a href="{% url 'create-model' %}">Dodaj model</a> </h5>
 {% endblock %}

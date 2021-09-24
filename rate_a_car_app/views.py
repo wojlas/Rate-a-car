@@ -170,7 +170,7 @@ class BrowseCarView(View):
     User can browse a car filtering by brand and simply skip to car details"""
 
     def get(self, request):
-        ctx = {'new_car': CarModel.objects.all().order_by('brand'),
+        ctx = {'new_car': CarModel.objects.all().order_by('brand', 'model', 'version'),
                'brands': Brand.objects.all()}
         return render(request, 'rate_a_car_app/cars.html', ctx)
 
@@ -372,21 +372,26 @@ class UserProfileView(LoginRequiredMixin, View):
         return render(request, 'rate_a_car_app/user-view.html', ctx)
 
 
-class AddCarHistoryView(View):
+class CarHistoryView(View):
     """Add car to user history"""
 
     def get(self, request, user):
         user = User.objects.get(username=user)
-        form = AddCarsHistoryForm(initial={'owner': user.id})
         cars = CarModel.objects.order_by('brand')
         ctx = {'user_car_history': CarOwners.objects.filter(owner=Profile.objects.get(user=user)).order_by('use_from'),
-               'add_car': form,
                'all_cars': cars,
                'car_count': CarOwners.objects.filter(owner=Profile.objects.get(user=user)).count()}
         return render(request, 'rate_a_car_app/car-history.html', ctx)
 
-    def post(self, request, user):
+class AddCarHistoryFormView(View):
+    """View with form to aded car to user history"""
+    def get(self, request, user, model, version):
+        form = AddCarsHistoryForm(initial={'owner': request.user.id,
+                                           'car': CarModel.objects.get(model=model, version=version)})
+        return render(request, 'rate_a_car_app/car-history-form.html', {'form':form,
+                                                                        'car': CarModel.objects.get(model=model, version=version)})
 
+    def post(self, request, user, model, version):
         user_obj = User.objects.get(username=user)
         profile = Profile.objects.get(user=user_obj)
         form = AddCarsHistoryForm(request.POST)
@@ -398,11 +403,9 @@ class AddCarHistoryView(View):
                                      use_to=form.cleaned_data['use_to'])
             return redirect(f"/profile/history/{user}/")
         else:
-            user = User.objects.get(username=user)
-            form = AddCarsHistoryForm(initial={'owner': user.id})
-            ctx = {'user_car_history': CarOwners.objects.filter(owner=user.id),
-                   'add_car': form}
-            return render(request, 'rate_a_car_app/car-history.html', ctx)
+            form = AddCarsHistoryForm(initial={'owner': request.user.id,
+                                               'car': CarModel.objects.get(model=model, version=version)})
+            return render(request, 'rate_a_car_app/car-history-form.html', {'form': form})
 
 
 class RemoveFromHistoryView(View):
