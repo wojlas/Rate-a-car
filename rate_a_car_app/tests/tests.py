@@ -2,7 +2,7 @@ import pytest
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 
-from rate_a_car_app.models import Brand, Profile, CarModel
+from rate_a_car_app.models import Brand, Profile, CarModel, Notice
 from rate_a_car_app.tests.utils import create_fake_user_with_second_pass, fake_brand, create_fake_same_pass, \
     fake_car_data
 
@@ -120,3 +120,25 @@ def test_delete_acc(loged_user, set_up):
 
     assert response.status_code == 302
     assert User.objects.count() == users_before - 1
+
+@pytest.mark.django_db
+def test_add_notice(loged_user, cars_in_db):
+    notice_before = Notice.objects.count()
+    car = CarModel.objects.first()
+    response = loged_user.post(f'/cars/{car.model}/{car.version}/notice/', {'author': loged_user,
+                                                                            'car':car,
+                                                                            'content': 'test notice from pytest'})
+
+    assert response.status_code == 302
+    assert Notice.objects.count() == notice_before + 1
+
+@pytest.mark.django_db
+def test_user_profile(client, set_up):
+    new_user = create_fake_user_with_second_pass()
+    register_response = client.post('/register/', new_user)
+    login_response = client.post('/login/', {'login': new_user['username'],
+                                       'password': new_user['password']})
+    user = authenticate(username=new_user['username'], password=new_user['password'])
+    response = client.get(f"/profile/user/{new_user['username']}/")
+
+    assert response.status_code == 200
