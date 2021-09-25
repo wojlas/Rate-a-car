@@ -47,8 +47,8 @@ class CarModel(models.Model):
     version = models.CharField(max_length=32, verbose_name='Wersja', null=True)
     production_from = models.IntegerField(null=False, verbose_name='Produkcja od')
     production_to = models.CharField(null=True, verbose_name='Produkcja do', default=' - ', max_length=4)
-    average_rate = models.FloatField(null=True)
-    opinions = models.ForeignKey('Notice', on_delete=models.CASCADE, null=True)
+    average_rate = models.FloatField(null=True, blank=True)
+    opinions = models.ForeignKey('Notice', on_delete=models.CASCADE, null=True, blank=True)
     owners = models.ManyToManyField(Profile, through='CarOwners')
     date = models.DateTimeField(auto_now_add=True)
 

@@ -17,9 +17,13 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'avatar']
     actions = [default_avatar]
 
-admin.site.register(Rate)
+@admin.register(Rate)
+class RateAdmin(admin.ModelAdmin):
+    list_display = ['user', 'carmodel', 'endurance', 'operation_cost', 'leading', 'design', 'date']
 
-admin.site.register(CarOwners)
+@admin.register(CarOwners)
+class CarOwnersAdmin(admin.ModelAdmin):
+    list_display = ['car', 'owner', 'use_from', 'use_to']
 
 @admin.register(Notice)
 class NoticeAdmin(admin.ModelAdmin):
